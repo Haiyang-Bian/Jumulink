@@ -33,6 +33,11 @@ const simArgs = ref({
   nodes: new Map(),
   adjacencyMatrix: []
 })
+// 仿真结果储存
+const simResult = ref({
+  done: false,
+  data: []
+})
 // 主侧边栏显示
 const show = ref(false)
 // 组件交互依赖项
@@ -76,6 +81,7 @@ provide('sysEdges', getEdges)
 provide('sysNodes', getNodes)
 provide('show', show)
 provide('simArgs', simArgs)
+provide('simResult', simResult)
 // 连接线设置
 onConnect((params) => {
   const newpar = {

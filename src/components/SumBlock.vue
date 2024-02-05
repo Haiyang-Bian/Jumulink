@@ -103,6 +103,7 @@ function SumNode() {
 	<NButton @dblclick="show = true" class="sum-block">
 		<SumNode/>
 	</NButton>
+	<div>{{ props.id }}</div>
 	<n-drawer v-model:show="show" :width="502">
 	    <n-drawer-content title="基本传函参数设置" closable>
 			<n-input v-model:value="opts.symbol" placeholder="[+]">

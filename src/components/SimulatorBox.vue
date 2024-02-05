@@ -6,7 +6,6 @@ import axios from 'axios';
 const nodes = inject('sysNodes') as any
 const edges = inject('sysEdges') as any
 const simArgs = inject('simArgs') as Ref<{ nodes: Map<string, any>, adjacencyMatrix: Array<any> }>
-const infos = ref('')
 
 function matchIdNum(id:string, arr:any) {
 	for (let a of arr) {
@@ -62,7 +61,7 @@ function getAdjacencyMatrix() {
 		ajmatrix.push({
 			nid: id.id,
 			nnum: num,
-			nnodes: Array.from({length:lens}).map(() => 0)
+			nnodes: Array.from({ length: lens }).map(() => 0)
 		})
 		num++
 	}
@@ -113,6 +112,14 @@ function getAdjacencyMatrix() {
 		}
 	}
 	simArgs.value.adjacencyMatrix = ajmatrix
+}
+
+const simResult = inject('simResult') as Ref<{
+	done: Boolean,
+	data: any
+}>
+
+function sendMsg() {
 	let request = axios.create({
 		timeout: 5000
 	})
@@ -123,20 +130,27 @@ function getAdjacencyMatrix() {
 	simArgs.value.nodes.forEach((v, k) => {
 		jsonobj[k] = v
 	})
-	request.post('/test', {
+	request.post('/jumulink', {
 		nodes: jsonobj,
 		map: simArgs.value.adjacencyMatrix
 	}, config)
 		.then((response: { data: any; }) => {
-			infos.value = response.data;
+			simResult.value.done = true
+			simResult.value.data = response.data
 			console.log(response.data);
 		})
 		.catch((error: any) => {
 			console.log(error);
 		});
 }
+
+function simulationStart() {
+	simResult.value.done = false;
+	getAdjacencyMatrix()
+	sendMsg()
+}
 </script>
 
 <template>
-	<NButton @click="getAdjacencyMatrix">按下以开始仿真!</NButton>
+	<NButton @click="simulationStart">按下以开始仿真!</NButton>
 </template>
