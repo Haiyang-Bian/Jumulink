@@ -51,7 +51,8 @@ function onDragStart(event:any, nodeType:any) {
 					D
 				<p>实际微分环节</p>
 				</div>
-				<div class="vue-flow__node-output" :draggable="true" @dragstart="onDragStart($event, 'soutput')">Output Node
+				<div class="vue-flow__node-output" :draggable="true" @dragstart="onDragStart($event, 'soutput')">
+					<p>示波器</p>
 				</div>
 			</div>
 		</aside>

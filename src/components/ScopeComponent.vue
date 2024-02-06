@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Handle, Position } from '@vue-flow/core'
-import { NButton, NModal } from 'naive-ui'
-import { inject, nextTick, ref, type Ref } from 'vue';
+import { NButton, NModal, useMessage, NScrollbar } from 'naive-ui'
+import { h, inject, nextTick, ref, type Ref } from 'vue';
 import * as echarts from 'echarts/core';
 import {
 	LineChart
@@ -58,29 +58,108 @@ function postProcessing(ans:any) {
 
 function Paint() {
 	show.value = true
-	nextTick(() => {
-		let myChart = echarts.init(picture.value)
-		myChart.showLoading()
-		nextTick(() => {
-			if (simResult.value.done) {
-				let datas = postProcessing(simResult.value.data.ans)
-				myChart.hideLoading()
-				myChart.setOption({
-					title: {
-						text: '输出变化图'
-					},
-					tooltip: {},
-					xAxis: {
-						data: simResult.value.data.x
-					},
-					yAxis: {},
-					series: datas
-				});
-			}
-		})
-	})
+	/* nextTick(() => { */
+	/* 	let myChart = echarts.init(picture.value) */
+	/* 	myChart.showLoading() */
+	/* 	nextTick(() => { */
+	/* 		if (simResult.value.done) { */
+	/* 			let datas = postProcessing(simResult.value.data.ans) */
+	/* 			myChart.hideLoading() */
+	/* 			myChart.setOption({ */
+	/* 				title: { */
+	/* 					text: '输出变化图' */
+	/* 				}, */
+	/* 				tooltip: {}, */
+	/* 				xAxis: { */
+	/* 					data: simResult.value.data.x */
+	/* 				}, */
+	/* 				yAxis: {}, */
+	/* 				series: datas */
+	/* 			}); */
+	/* 		} */
+	/* 	}) */
+	/* }) */
 }
 
+const multiGraph = ref(false)
+
+const msg = useMessage()
+function Scope() {
+	if (simResult.value.done) {
+		let data = postProcessing(simResult.value.data.ans)
+		console.log(data)
+		if (multiGraph.value) {
+			let graph = []
+			for (let d of data) {
+				graph.push(h(
+					'div',
+					{
+						class: 'picture',
+						ref: (el: any) => {
+							nextTick(() => {
+								let myChart = echarts.init(el)
+								myChart.setOption({
+									title: {
+										text: '输出变化图(关于'.concat(d.name,')')
+									},
+									tooltip: {},
+									xAxis: {
+										data: simResult.value.data.x
+									},
+									yAxis: {},
+									series: [d]
+								});
+							})
+						},
+					}
+				), h('br'))
+			}
+			return h(
+				NScrollbar,
+				graph
+			)
+		} else {
+			return h(
+				'div',
+				{
+					class: 'picture',
+					ref: (el: any) => {
+						nextTick(() => {
+							let myChart = echarts.init(el)
+							myChart.setOption({
+								title: {
+									text: '输出变化图'
+								},
+								tooltip: {},
+								xAxis: {
+									data: simResult.value.data.x
+								},
+								yAxis: {},
+								series: data
+							});
+						})
+					},
+				}
+			)
+		}
+	} else {
+		if (multiGraph.value) {
+			msg.error("没有数据,无法分图!")
+		}
+		return h(
+			'div',
+			{
+				class: "picture",
+				ref: (el: any) => {
+					nextTick(() => {
+						let myChart = echarts.init(el)
+						myChart.showLoading()
+					})
+				},
+			}
+		)
+	}
+}
 
 const props = defineProps({
 	id: {
@@ -109,11 +188,11 @@ simArgs.value.nodes.set(props.id, {
 	    preset="dialog"
 	    title="示波器"
 	    content="你确认"
-	    positive-text="确认"
-	    negative-text="算了"
-		style="width: 1000px; height: 700px;"
+		style="width: 1050px;"
 	>
-		<div ref="picture" style="width: 1000px; height: 500px;"></div>
+		<Scope/>
+		<n-button @click="multiGraph = false">单图显示</n-button>
+		<n-button @click="multiGraph = true">分图显示</n-button>
 	</n-modal>
 	<div>{{ props.id }}</div>
 </template>

@@ -74,6 +74,11 @@ body,
 	color: #f704a2;
 }
 
+.picture {
+	width: 920px;
+	height: 580px;
+	border-style: solid;
+}
 
 @media screen and (min-width: 640px) {
 	.dndflow {

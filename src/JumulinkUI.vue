@@ -64,14 +64,6 @@ const xRef = ref(0)
 const yRef = ref(0)
 const options = [
   {
-    label: '复制',
-    key: '1'
-  },
-  {
-    label: '粘贴',
-    key: '2'
-  },
-  {
     label: '删除',
     key: '3'
   }
