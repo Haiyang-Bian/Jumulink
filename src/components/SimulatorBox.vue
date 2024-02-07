@@ -17,7 +17,7 @@ function matchIdNum(id:string, arr:any) {
 function isSum(id:string, arr:any) {
 	for (let a of arr) {
 		if (id == a.id) {
-			if (a.type == 'sumblock') {
+			if (a.type == 'sumblock' || a.type == 'sum') {
 				return true
 			}
 		}
