@@ -3,7 +3,7 @@ import './assets/main.css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
-import App from './JumulinkUI.vue'
+import App from './components/JumulinkUI.vue'
 import router from './router'
 
 import axios from 'axios'

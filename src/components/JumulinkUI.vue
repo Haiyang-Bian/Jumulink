@@ -1,20 +1,21 @@
 <script setup lang="ts">
 import { MarkerType, VueFlow, useVueFlow } from '@vue-flow/core'
-import { markRaw, nextTick, provide, ref, watch } from 'vue'
-import Sidebar from './components/SideBar.vue'
-import Tf from './components/TransferFunction.vue'
-import SumBlock from './components/SumBlock.vue'
 import { MiniMap } from '@vue-flow/minimap'
 import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
-import SimulatorBox from './components/SimulatorBox.vue'
+import { markRaw, nextTick, provide, ref, watch } from 'vue'
 import { NMessageProvider, NDropdown } from 'naive-ui'
-import Plink from './components/ProportionalComponent.vue'
-import Ilink from './components/IntegralComponent.vue'
-import IDlink from './components/IdealDifferentialLink.vue'
-import ADlink from './components/ActualDifferentiationProcess.vue'
-import InPut from './components/SystemInput.vue'
-import Scope from './components/ScopeComponent.vue'
+import Sidebar from '@/components/SideBar.vue'
+import Tf from '@/components/TransferFunction.vue'
+import SumBlock from '@/components/SumBlock.vue'
+import SimulatorBox from '@/components/SimulatorBox.vue'
+import Plink from '@/components/ProportionalComponent.vue'
+import Ilink from '@/components/IntegralComponent.vue'
+import IDlink from '@/components/IdealDifferentialLink.vue'
+import ADlink from '@/components/ActualDifferentiationProcess.vue'
+import InPut from '@/components/SystemInput.vue'
+import Scope from '@/components/ScopeComponent.vue'
+import SumPoint from '@/components/SumPoint.vue'
 
 // 组件类型登记
 const nodeTypes = {
@@ -25,7 +26,8 @@ const nodeTypes = {
   integrator: markRaw(Ilink),
   idealdiff: markRaw(IDlink),
   actualdiff: markRaw(ADlink),
-  soutput: markRaw(Scope)
+  soutput: markRaw(Scope),
+  sum: markRaw(SumPoint),
 }
 // 仿真参数储存
 const simArgs = ref({
@@ -82,13 +84,13 @@ onConnect((params) => {
     sourceHandle: params.sourceHandle,
     targetHandle: params.targetHandle,
     style: {
-      stroke: '#10b981',
+      stroke: 'rgb(0,0,0)',
+      strokeWidth: '4px'
     },
     markerEnd: MarkerType.Arrow,
   }
   addEdges(newpar)
 })
-// 设置右键菜单
 const s = ref({
   name: '',
   type: ''
@@ -180,7 +182,9 @@ function onDrop(event: any) {
       <VueFlow 
         @dragover="onDragOver" 
         :node-types="nodeTypes"
-        :default-edge-options="{ type: 'smoothstep' }"
+        :default-edge-options="{ 
+          type: 'smoothstep',
+        }"
       >
         <MiniMap />
         <Background pattern-color="#aaa" :gap="8" />

@@ -2,6 +2,7 @@
 import { Handle, Position } from '@vue-flow/core'
 import { NButton, NModal, useMessage, NScrollbar } from 'naive-ui'
 import { h, inject, nextTick, ref, type Ref } from 'vue';
+import Func from '@/assets/somefuncs'
 import * as echarts from 'echarts/core';
 import {
 	LineChart
@@ -31,14 +32,13 @@ echarts.use([
 	CanvasRenderer
 ]);
 
+const nodes = inject('sysNodes')
 const show = ref(false)
 
 const simResult = inject('simResult') as Ref<{
 	done: Boolean,
 	data: any
 }>
-
-const picture = ref<any>(null)
 
 function postProcessing(ans:any) {
 	let newans = []
@@ -54,31 +54,6 @@ function postProcessing(ans:any) {
 		}
 	} 
 	return newans
-}
-
-function Paint() {
-	show.value = true
-	/* nextTick(() => { */
-	/* 	let myChart = echarts.init(picture.value) */
-	/* 	myChart.showLoading() */
-	/* 	nextTick(() => { */
-	/* 		if (simResult.value.done) { */
-	/* 			let datas = postProcessing(simResult.value.data.ans) */
-	/* 			myChart.hideLoading() */
-	/* 			myChart.setOption({ */
-	/* 				title: { */
-	/* 					text: '输出变化图' */
-	/* 				}, */
-	/* 				tooltip: {}, */
-	/* 				xAxis: { */
-	/* 					data: simResult.value.data.x */
-	/* 				}, */
-	/* 				yAxis: {}, */
-	/* 				series: datas */
-	/* 			}); */
-	/* 		} */
-	/* 	}) */
-	/* }) */
 }
 
 const multiGraph = ref(false)
@@ -178,9 +153,16 @@ simArgs.value.nodes.set(props.id, {
 </script>
 
 <template>
-	<NButton @dblclick="Paint" class="vue-flow__node-default">
-		<div class="vue-flow__node-default">Scope</div>
-		<Handle id="b" type="target" :position="Position.Left" />
+	<NButton @dblclick="show = true" class="sys-output">
+		<p><strong>示波器</strong></p>
+		<Handle id="b" 
+			type="target" 
+			:position="Position.Left"
+			:is-valid-connection="(conn) => Func(conn, nodes)"
+			:style="{
+				backgroundColor: 'red'
+			}"
+		/>
 	</NButton>
 	<n-modal
 	    v-model:show="show"

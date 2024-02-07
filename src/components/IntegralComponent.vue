@@ -2,6 +2,7 @@
 import { Handle, Position } from '@vue-flow/core'
 import { NButton, NDrawer, NDrawerContent, NInput } from 'naive-ui'
 import { inject, ref, type Ref } from 'vue';
+import Func from '@/assets/somefuncs'
 
 const props = defineProps({
 	id: {
@@ -9,6 +10,7 @@ const props = defineProps({
 		required: true,
 	}
 })
+const nodes = inject('sysNodes') as any
 const simArgs = inject('simArgs') as Ref<{
 	start: boolean,
 	nodes: Map<string, any>,
@@ -23,10 +25,24 @@ simArgs.value.nodes.set(props.id, msg.value)
 </script>
 
 <template>
-	<NButton @dblclick="show = true" class="vue-flow__node-default">
-		<div class="vue-flow__node-default">I</div>
-		<Handle id="a" type="source" :position="Position.Right" />
-		<Handle id="b" type="target" :position="Position.Left" />
+	<NButton @dblclick="show = true" class="int-link">
+		<p><strong>I</strong></p>
+		<Handle id="a" 
+			type="source" 
+			:position="Position.Right" 
+			:is-valid-connection="(conn) => Func(conn, nodes)"
+			:style="{
+				backgroundColor: 'blue'
+			}"
+		/>
+		<Handle id="b" 
+			type="target" 
+			:position="Position.Left"
+			:is-valid-connection="(conn) => Func(conn, nodes)"
+			:style="{
+				backgroundColor: 'red'
+			}"
+		/>
 	</NButton>
 	<n-drawer v-model:show="show" :width="502">
 		<n-drawer-content title="基本传函参数设置" closable>

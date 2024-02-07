@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { Handle, Position } from '@vue-flow/core'
 import { h, inject, reactive, ref, type Ref } from 'vue';
-import { NDrawer, NDrawerContent, NInput, NButton } from 'naive-ui'
+import { NDrawer, NDrawerContent, NInput, NButton, useMessage } from 'naive-ui'
+import Func from '@/assets/somefuncs'
 
 const show = ref(false)
+const nodes = inject('sysNodes') as any
 const props = defineProps({
 	id: {
 		type: String,
@@ -22,9 +24,12 @@ const opts = reactive({
 simArgs.value.nodes.set(props.id, opts.symbol)
 const c = h(Handle, {
 	id: "a",
+	type: 'source',
 	position: Position.Right,
+	isValidConnection: (conn) => Func(conn, nodes.value),
 	style: {
-		top: "100px"
+		top: "100px",
+		backgroundColor: 'blue',
 	}
 })
 
@@ -51,6 +56,8 @@ const ids = [
 	}
 ]
 
+const msg = useMessage()
+
 function SumNode() {
 	if (show.value) {
 		return h(
@@ -65,17 +72,23 @@ function SumNode() {
 			symbol: opts.symbol
 		})
 		let num = opts.symbol.slice(1, -1).length
+		if (num > 5) {
+			msg.error("和块最多五个输入!")
+		} else if (num < 1) {
+			msg.error("和块至少一个输入!")
+		}
 		let comps = [c]
 		let handles = ids.slice(0, num).map((x: any) => {
-			let p = Math.floor(200 / (num + 1)) * x.num
+			let p = Math.floor(180 / (num + 1)) * x.num
 			const sourceHandleStyle = {
-				filter: 'invert(100%)',
-				top: String(p).concat('px')
+				top: String(p).concat('px'),
+				backgroundColor: 'red',
 			}
 			return h(Handle, {
 				id: x.id,
 				type: "target",
 				position: Position.Left,
+				isValidConnection: (conn) => Func(conn, nodes.value),
 				style: sourceHandleStyle
 			})
 		})
