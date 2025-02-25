@@ -1,6 +1,9 @@
 
 @import './jumulink.css';
 
+body::-webkit-scrollbar {
+	display: none;
+}
 
 .customnodeflow .vue-flow__node-custom {
 	border: 1px solid #777;
