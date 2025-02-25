@@ -1,5 +1,3 @@
-include("TransferFunction.jl")
-
 """
 某输出基于某输入的传递函数对应的状态空间
 """

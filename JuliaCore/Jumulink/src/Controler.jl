@@ -1,7 +1,3 @@
-using DifferentialEquations, Dierckx
-
-# 导入传递函数分析模块
-include("StateSpace.jl")
 
 global input = () -> ()
 

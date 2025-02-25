@@ -1,7 +1,3 @@
-using Oxygen, HTTP
-
-include("Controler.jl")
-
 const CORS_HEADERS = [
     "Access-Control-Allow-Origin" => "*",
     "Access-Control-Allow-Headers" => "*",
@@ -25,4 +21,6 @@ end
 end
 
 # 异步启动服务器
-serve(async=true, middleware=[core_middleware])
+function server_mode()
+    serve(async=true, middleware=[core_middleware])
+end

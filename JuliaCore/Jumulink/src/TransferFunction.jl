@@ -1,8 +1,5 @@
 # 该模块用于处理控制系统方框图,利用梅森公式获取传函
 
-include("Polynomial.jl")
-include("SymbolTest.jl")
-
 abstract type AbstractLink end
 abstract type TypicalLink <: AbstractLink end
 abstract type AbstractPath end

@@ -1,0 +1,10 @@
+name = "JumuLink"
+uuid = "ce93092c-2db9-43e3-aa67-9c567751ac06"
+authors = ["Alice Lin <2668798565@qq.com>"]
+version = "0.1.0"
+
+[deps]
+Dierckx = "39dd38d3-220a-591b-8e3c-4c3a8c710a94"
+DifferentialEquations = "0c46a032-eb83-5123-abaf-570d42b7fbaa"
+HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
+Oxygen = "df9a0d86-3283-4920-82dc-4555fc0d1d8b"
