@@ -1,25 +1,17 @@
 <script setup lang="ts">
 import { MarkerType, VueFlow, useVueFlow } from '@vue-flow/core'
-import { MiniMap } from '@vue-flow/minimap'
-import { Background } from '@vue-flow/background'
-import { Controls } from '@vue-flow/controls'
-import { markRaw, nextTick, provide, ref, watch } from 'vue'
-import { NMessageProvider, NDropdown } from 'naive-ui'
-import Sidebar from '@/components/SideBar.vue'
-import Tf from '@/components/TransferFunction.vue'
-import SumBlock from '@/components/SumBlock.vue'
-import SimulatorBox from '@/components/SimulatorBox.vue'
-import Plink from '@/components/ProportionalComponent.vue'
-import Ilink from '@/components/IntegralComponent.vue'
-import IDlink from '@/components/IdealDifferentialLink.vue'
-import ADlink from '@/components/ActualDifferentiationProcess.vue'
-import InPut from '@/components/SystemInput.vue'
-import Scope from '@/components/ScopeComponent.vue'
-import SumPoint from '@/components/SumPoint.vue'
+import { MiniMap } from '@vue-flow/minimap';
+import { Background } from '@vue-flow/background';
+import { Controls } from '@vue-flow/controls';
+import { markRaw, nextTick, provide, ref, watch } from 'vue';
+import { NMessageProvider, NDropdown } from 'naive-ui';
+import { IDlink, ADlink, Tf, Ilink, Plink } from './basic-links';
+import { Input, SumBlock, Scope, SumPoint } from './helper-components';
+import { SideBar, SimulatorBox } from './ui-components';
 
 // 组件类型登记
-const nodeTypes = {
-  sinput: markRaw(InPut),
+const nodeTypes: Record<string, any> = {
+  sinput: markRaw(Input),
   transferfunction: markRaw(Tf),
   sumblock: markRaw(SumBlock),
   plink: markRaw(Plink),
@@ -56,10 +48,7 @@ const {
   onNodeContextMenu,
   project,
   vueFlowRef
-} = useVueFlow({
-  nodes: [
-  ]
-})
+} = useVueFlow()
 // 右键菜单依赖项
 const showDropdownRef = ref(false)
 const xRef = ref(0)
@@ -139,7 +128,7 @@ function onDragOver(event: any) {
     event.dataTransfer.dropEffect = 'move'
   }
 }
-function onDrop(event: any) {
+function onDrop(event: DragEvent) {
   const type = event.dataTransfer?.getData('application/vueflow')
   const { left, top } = (vueFlowRef.value as any).getBoundingClientRect()
   const position = project({
@@ -154,7 +143,7 @@ function onDrop(event: any) {
     label: `${type} node`,
   }
   
-  addNodes([newNode])
+  addNodes(newNode)
 
   // align node position after drop, so it's centered to the mouse
   nextTick(() => {
@@ -190,10 +179,16 @@ function onDrop(event: any) {
         <Background pattern-color="#aaa" :gap="8" />
         <Controls />
       </VueFlow>
-      <Sidebar />
+      <SideBar />
       <SimulatorBox />
     </n-message-provider>
-    <n-dropdown placement="bottom-start" trigger="manual" :x="xRef" :y="yRef" :options="options" :show="showDropdownRef"
-    	    @select="handleSelect" />
+    <n-dropdown
+      placement="bottom-start"
+      trigger="manual"
+      :x="xRef" :y="yRef"
+      :options="options"
+      :show="showDropdownRef"
+      @select="handleSelect"
+    />
   </div>
 </template>

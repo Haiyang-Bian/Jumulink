@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { Handle, Position } from '@vue-flow/core'
+import { Handle, type NodeComponent, Position } from '@vue-flow/core'
 import { NButton, NDrawer, NDrawerContent, NInput, NPopselect } from 'naive-ui'
 import { inject, ref, type Ref } from 'vue';
 import Func from '@/assets/somefuncs'
 
-const nodes = inject('sysNodes')
+defineOptions({
+  inheritAttrs: false
+});
 
+const nodes = inject('sysNodes')
 const props = defineProps({
 	id: {
 		type: String,

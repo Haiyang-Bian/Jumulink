@@ -2,7 +2,7 @@
 import { Handle, Position } from '@vue-flow/core'
 import { h, inject, reactive, ref, type Ref } from 'vue';
 import { NDrawer, NDrawerContent, NInput, NButton, useMessage } from 'naive-ui'
-import Logo from '@/components/SumPointLogo.vue'
+import Logo from './SumPointLogo.vue'
 import Func from '@/assets/somefuncs'
 
 const show = ref(false)
