@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Handle, Position } from '@vue-flow/core'
-import Func from '@/assets/somefuncs'
+import Func from '@/utils/some-funcs'
 import { inject } from 'vue';
 const nodes = inject('sysNodes')
 </script>

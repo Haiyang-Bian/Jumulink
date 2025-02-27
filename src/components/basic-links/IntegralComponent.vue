@@ -2,7 +2,7 @@
 import { Handle, Position } from '@vue-flow/core'
 import { NButton, NDrawer, NDrawerContent, NInput } from 'naive-ui'
 import { inject, ref, type Ref } from 'vue';
-import Func from '@/assets/somefuncs'
+import Func from '@/utils/some-funcs'
 
 const props = defineProps({
 	id: {

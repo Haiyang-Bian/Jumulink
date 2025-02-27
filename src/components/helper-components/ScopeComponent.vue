@@ -2,7 +2,7 @@
 import { Handle, Position } from '@vue-flow/core'
 import { NButton, NModal, useMessage, NScrollbar } from 'naive-ui'
 import { h, inject, nextTick, ref, type Ref } from 'vue';
-import Func from '@/assets/somefuncs'
+import Func from '@/utils/some-funcs'
 import * as echarts from 'echarts/core';
 import {
 	LineChart

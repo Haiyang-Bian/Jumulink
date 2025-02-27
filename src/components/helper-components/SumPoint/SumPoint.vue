@@ -3,7 +3,7 @@ import { Handle, Position } from '@vue-flow/core'
 import { h, inject, reactive, ref, type Ref } from 'vue';
 import { NDrawer, NDrawerContent, NInput, NButton, useMessage } from 'naive-ui'
 import Logo from './SumPointLogo.vue'
-import Func from '@/assets/somefuncs'
+import Func from '@/utils/some-funcs'
 
 const show = ref(false)
 const nodes = inject('sysNodes') as any
