@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import H from '@/components/ui-components/SideBar.vue';
+import H from '../components/ui-components/SideBar/SideBar.vue';
 </script>
 
 <template>

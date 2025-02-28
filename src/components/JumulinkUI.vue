@@ -7,7 +7,9 @@ import { markRaw, nextTick, provide, ref, watch } from 'vue';
 import { NMessageProvider, NDropdown } from 'naive-ui';
 import { IDlink, ADlink, Tf, Ilink, Plink } from './basic-links';
 import { Input, SumBlock, Scope, SumPoint } from './helper-components';
-import { SideBar, SimulatorBox } from './ui-components';
+import { SideBar } from './ui-components';
+import { ElAside, ElMain } from 'element-plus';
+
 
 // 组件类型登记
 const nodeTypes: Record<string, any> = {
@@ -168,19 +170,24 @@ function onDrop(event: DragEvent) {
 <template>
   <div class="dndflow" @drop="onDrop" @click.right="getMXY" @click="showDropdownRef = false">
     <n-message-provider>
-      <VueFlow 
-        @dragover="onDragOver" 
-        :node-types="nodeTypes"
-        :default-edge-options="{ 
-          type: 'smoothstep',
-        }"
-      >
-        <MiniMap />
-        <Background pattern-color="#aaa" :gap="8" />
-        <Controls />
-      </VueFlow>
-      <SideBar />
-      <SimulatorBox />
+        <el-container>
+            <el-main>
+                <VueFlow
+                    @dragover="onDragOver"
+                    :node-types="nodeTypes"
+                    :default-edge-options="{
+                        type: 'smoothstep',
+                    }"
+                >
+                    <MiniMap />
+                    <Background pattern-color="#aaa" :gap="8" />
+                    <Controls />
+                </VueFlow>
+            </el-main>
+            <el-aside width="200px">
+                <side-bar />
+            </el-aside>
+        </el-container>
     </n-message-provider>
     <n-dropdown
       placement="bottom-start"

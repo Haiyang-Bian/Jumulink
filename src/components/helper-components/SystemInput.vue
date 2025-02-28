@@ -1,35 +1,37 @@
 <script setup lang="ts">
-import { Handle, type NodeComponent, Position } from '@vue-flow/core'
-import { NButton, NDrawer, NDrawerContent, NInput, NPopselect } from 'naive-ui'
-import { inject, ref, type Ref } from 'vue';
+import { Handle, Position } from '@vue-flow/core'
+import { NButton, NInput, NPopselect } from 'naive-ui'
+import { ref, onMounted, type Ref } from 'vue'
 import Func from '@/utils/some-funcs'
+import { BaseContainer } from '@/components/basic-links'
+import { type IComponentInfo } from '@/utils/jumulink-types'
+import { useSimulaitionArgsStore } from '@/stores/simulation-args'
 
 defineOptions({
-  inheritAttrs: false
+	inheritAttrs: false
 });
 
-const nodes = inject('sysNodes')
-const props = defineProps({
-	id: {
-		type: String,
-		required: true,
-	}
-})
-const simArgs = inject('simArgs') as Ref<{
-	start: boolean,
-	nodes: Map<string, any>,
-	adjacencyMatrix: Array<any>
-}>
-const show = ref(false)
-const msg = ref({
+const props = defineProps<{ id: string }>()
+
+const simDatas = useSimulaitionArgsStore();
+
+const msg: Ref<IComponentInfo> = ref<IComponentInfo>({
 	type: '阶跃输入',
 	args: {
 		K: '1',
 		t: '0'
 	}
 })
-simArgs.value.nodes.set(props.id, msg.value)
-const value = ref('阶跃输入')
+
+const value = ref<string>('阶跃输入')
+
+onMounted(() => {
+	let value = simDatas.getNode(props.id)
+	if (value) {
+		msg.value = value
+	}
+})
+
 const options = [
 	{
 		label: '阶跃输入',
@@ -45,30 +47,23 @@ const options = [
 	}
 ]
 function CallBack() {
-	simArgs.value.nodes.delete(props.id)
-	msg.value.type = value.value
-	simArgs.value.nodes.set(props.id, msg.value)
+	simDatas.setNode(props.id, msg.value)
 }
 </script>
 
 <template>
-	<NButton @dblclick="show = true" class="sys-input">
-		<p><strong>系统输入</strong></p>
-		<Handle 
-			id="a" 
-			type="source" 
-			:position="Position.Right" 
-			:is-valid-connection="(conn) => Func(conn, nodes)"
-			:style="{
-				backgroundColor: 'blue',
-			}"
-		/>
-	</NButton>
-	<n-drawer v-model:show="show" :width="502">
-		<n-drawer-content title="输入参数设置" closable>
+	<base-container :id="id">
+		<template #component-logo>
+			<p><strong>系统输入</strong></p>
+			<Handle id="a" type="source" :position="Position.Right"
+				:is-valid-connection="(conn) => Func(conn, simDatas.nodes)" :style="{
+					backgroundColor: 'blue',
+				}" />
+		</template>
+		<template #component-set>
 			<n-popselect v-model:value="value" :options="options" trigger="click" @click="CallBack">
-	    		<n-button>{{ value || '弹出选择' }}</n-button>
-	  		</n-popselect>
+				<n-button>{{ value || '弹出选择' }}</n-button>
+			</n-popselect>
 			<n-input v-model:value="msg.args.K" placeholder="1">
 				<template #prefix>
 					比例系数:
@@ -79,7 +74,6 @@ function CallBack() {
 					阶跃时间:
 				</template>
 			</n-input>
-		</n-drawer-content>
-	</n-drawer>
-	<div>{{ props.id }}</div>
+		</template>
+	</base-container>
 </template>

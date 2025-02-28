@@ -1,11 +1,15 @@
 ﻿<script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref, reactive } from 'vue'
 
 const props = defineProps({
 	id: {
 		type: String,
 		required: true,
 	},
+    borderWidth: {
+      type: Number,
+      default: 2,
+    },
   width: {
     type: Number,
     default: 100,
@@ -13,23 +17,42 @@ const props = defineProps({
   height: {
     type: Number,
     default: 100,
-  }
+  },
+    setType: {
+      type: String,
+      default: 'drawer',
+    },
 })
 
-const show = ref(false)
+const show = reactive({
+    showDialog: false,
+    showDrawer: false
+})
+
+const setShow = () => {
+  switch (props.setType) {
+      case 'dialog':
+          show.showDialog = true
+          break
+      case 'drawer':
+          show.showDrawer = true
+          break
+  }
+}
+
 </script>
 
 <template>
-  <div @dblclick="show = true" :style="{
+  <div @dblclick="setShow" :style="{
     width: `${props.width}px`,
     height: `${props.height}px`,
+    'border-width': `${props.borderWidth}px`,
   }" class="base-container">
     <slot name="component-logo"></slot>
   </div>
 <!--  <div>{{ props.id }}</div>-->
-
   <el-drawer
-    v-model="show"
+    v-model="show.showDrawer"
     title="I am the title"
     :with-header="false"
     direction="rtl"
@@ -37,23 +60,31 @@ const show = ref(false)
   >
     <slot name="component-set"></slot>
   </el-drawer>
+    <el-dialog
+        v-model="show.showDialog"
+        title="Tips"
+        width="500"
+        :append-to-body="true"
+    >
+        <slot name="component-show"></slot>
+    </el-dialog>
+
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .base-container {
   display: flex;
   flex-direction: column;
-  border-width: 2px;
   border-style: solid;
   border-color: #000000;
   font-size: 40px;
   background: #fdfefe;
   justify-content: space-between;
-}
 
-.base-container:hover {
-  padding: 3px;
-  border-color: var(--el-border-color-hover);
-  border-style: dashed;
+    &:hover {
+      padding: 3px;
+      border-color: var(--el-border-color-hover);
+      border-style: dashed;
+    }
 }
 </style>

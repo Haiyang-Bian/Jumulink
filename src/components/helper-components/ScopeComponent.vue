@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Handle, Position } from '@vue-flow/core'
-import { NButton, NModal, useMessage, NScrollbar } from 'naive-ui'
+import { NButton, useMessage, NScrollbar } from 'naive-ui'
 import { h, inject, nextTick, ref, type Ref } from 'vue';
 import Func from '@/utils/some-funcs'
 import * as echarts from 'echarts/core';
@@ -18,6 +18,11 @@ import {
 } from 'echarts/components';
 import { LabelLayout, UniversalTransition } from 'echarts/features';
 import { CanvasRenderer } from 'echarts/renderers';
+import { BaseContainer } from '@/components/basic-links'
+
+defineOptions({
+    inheritAttrs: false
+})
 
 // 注册必须的组件
 echarts.use([
@@ -33,7 +38,7 @@ echarts.use([
 ]);
 
 const nodes = inject('sysNodes')
-const show = ref(false)
+
 
 const simResult = inject('simResult') as Ref<{
 	done: Boolean,
@@ -153,28 +158,22 @@ simArgs.value.nodes.set(props.id, {
 </script>
 
 <template>
-	<NButton @dblclick="show = true" class="sys-output">
-		<p><strong>示波器</strong></p>
-		<Handle id="b" 
-			type="target" 
-			:position="Position.Left"
-			:is-valid-connection="(conn) => Func(conn, nodes)"
-			:style="{
+    <base-container :id="id" set-type="dialog">
+        <template #component-logo>
+            <p><strong>示波器</strong></p>
+            <Handle id="b"
+                    type="target"
+                    :position="Position.Left"
+                    :is-valid-connection="(conn) => Func(conn, nodes)"
+                    :style="{
 				backgroundColor: 'red'
 			}"
-		/>
-	</NButton>
-	<n-modal
-	    v-model:show="show"
-	    :mask-closable="false"
-	    preset="dialog"
-	    title="示波器"
-	    content="你确认"
-		style="width: 1050px;"
-	>
-		<Scope/>
-		<n-button @click="multiGraph = false">单图显示</n-button>
-		<n-button @click="multiGraph = true">分图显示</n-button>
-	</n-modal>
-	<div>{{ props.id }}</div>
+            />
+        </template>
+        <template #component-show>
+            <Scope/>
+            <n-button @click="multiGraph = false">单图显示</n-button>
+            <n-button @click="multiGraph = true">分图显示</n-button>
+        </template>
+    </base-container>
 </template>

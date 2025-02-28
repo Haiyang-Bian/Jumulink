@@ -5,6 +5,10 @@ import BaseContainer from './BaseContainer.vue';
 import { inject, ref, type Ref } from 'vue';
 import Func from '@/utils/some-funcs';
 
+defineOptions({
+    inheritAttrs: false
+});
+
 const props = defineProps({
 	id: {
 		type: String,
@@ -22,7 +26,7 @@ const msg = ref({
 	type: "D_I",
 	Td: "1"
 })
-simArgs.value.nodes.set(props.id, msg.value)
+simArgs.value.nodes.set(props.id as string, msg.value)
 </script>
 
 <template>
