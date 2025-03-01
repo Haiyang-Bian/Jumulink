@@ -1,4 +1,4 @@
-import { MarkerType, useVueFlow } from "@vue-flow/core"
+import { useSimulaitionArgsStore } from "@/stores/simulation-args"
 import { nextTick, watch } from "vue"
 
 
@@ -7,31 +7,7 @@ export function useDragAndDrop() {
 
 	let id = 0
 
-	// 组件交互依赖项
-	const {
-		findNode,
-		onConnect,
-		addEdges,
-		addNodes,
-		project,
-		vueFlowRef
-	} = useVueFlow()
-
-	// 连接线设置
-	onConnect((params) => {
-		const newpar = {
-			source: params.source,
-			target: params.target,
-			sourceHandle: params.sourceHandle,
-			targetHandle: params.targetHandle,
-			style: {
-				stroke: 'rgb(0,0,0)',
-				strokeWidth: '4px'
-			},
-			markerEnd: MarkerType.Arrow,
-		}
-		addEdges(newpar)
-	})
+	const { addNodes, findNode, project, IVueFlowRef } = useSimulaitionArgsStore();
 
 	function getId() {
 		return `node_${id++}`
@@ -45,7 +21,7 @@ export function useDragAndDrop() {
 	}
 	function onDrop(event: DragEvent) {
 		const type = event.dataTransfer?.getData('application/vueflow')
-		const { left, top } = (vueFlowRef.value as any).getBoundingClientRect()
+		const { left, top } = (IVueFlowRef().value as HTMLDivElement).getBoundingClientRect()
 		const position = project({
 			x: event.clientX - left,
 			y: event.clientY - top,
@@ -80,7 +56,7 @@ export function useDragAndDrop() {
 
 	return {
 		onDragOver,
-		onDrop
+		onDrop,
 	}
 }
 

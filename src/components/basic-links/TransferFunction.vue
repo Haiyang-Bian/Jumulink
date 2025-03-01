@@ -26,6 +26,8 @@ onMounted(() => {
 	let value = simDatas.getNode(props.id)
 	if (value) {
 		msg.value = value
+	} else {
+		simDatas.setNode(props.id, msg.value)
 	}
 })
 </script>
@@ -44,12 +46,12 @@ onMounted(() => {
 				}" />
 		</template>
 		<template #component-set>
-			<n-input v-model:value="msg.args.num" placeholder="[0]">
+			<n-input v-model:value="(msg.args as Record<string, string>).num" placeholder="[0]">
 				<template #prefix>
 					分子多项式系数:
 				</template>
 			</n-input>
-			<n-input v-model:value="msg.args.den" placeholder="[1]">
+			<n-input v-model:value="(msg.args as Record<string, string>).den" placeholder="[1]">
 				<template #prefix>
 					分母多项式系数:
 				</template>

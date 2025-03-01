@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import { Handle, Position } from '@vue-flow/core'
-import { h, reactive, ref } from 'vue';
-import { NDrawer, NDrawerContent, NInput, NButton, useMessage } from 'naive-ui'
+import { h, reactive } from 'vue';
+import { useMessage } from 'naive-ui'
 import Logo from './SumPointLogo.vue'
 import { useSimulaitionArgsStore } from '@/stores/simulation-args';
+import BaseContainer from '@/components/basic-links/BaseContainer.vue';
 
 defineOptions({
 	inheritAttrs: false
 })
-
-const show = ref(false)
 
 const props = defineProps<{ id: string }>()
 
@@ -35,151 +34,128 @@ const ids = [
 const msg = useMessage()
 
 function SumHandle() {
-	if (show.value) {
-		return h(Handle, {
-			id: "b",
-			type: 'source',
-			position: Position.Left,
-			isValidConnection: simDatas.isValidConnection,
-			style: {
-				backgroundColor: 'blue',
-			}
-		})
-	} else {
-		simDatas.setNode(props.id, {
-			type: 'Sum',
-			args: {
-				symbol: opts.symbol
-			}
-		})
-		let num = opts.symbol.slice(1, -1).length
-		if (num > 3) {
-			msg.error("和点最多三个入口")
-		} else if (num < 1) {
-			msg.error("和点至少有一个入口")
+
+	simDatas.setNode(props.id, {
+		type: 'Sum',
+		args: {
+			symbol: opts.symbol
 		}
-		return ids.slice(0, num).map((x: any) => {
-			switch (x.id) {
-				case 'b':
-					return h(
-						Handle,
-						{
-							id: 'b',
-							type: 'target',
-							position: Position.Left,
-							isValidConnection: simDatas.isValidConnection,
-							style: {
-								backgroundColor: 'red',
-							}
-						}
-					)
-				case 'c':
-					return h(
-						Handle,
-						{
-							id: 'c',
-							type: 'target',
-							position: Position.Bottom,
-							isValidConnection: simDatas.isValidConnection,
-							style: {
-								backgroundColor: 'red',
-							}
-						}
-					)
-				case 'd':
-					return h(
-						Handle,
-						{
-							id: 'd',
-							type: 'target',
-							position: Position.Top,
-							isValidConnection: simDatas.isValidConnection,
-							style: {
-								backgroundColor: 'red',
-							}
-						}
-					)
-			}
-		})
+	})
+	let num = opts.symbol.slice(1, -1).length
+	if (num > 3) {
+		msg.error("和点最多三个入口")
+	} else if (num < 1) {
+		msg.error("和点至少有一个入口")
 	}
+	return ids.slice(0, num).map((x: any) => {
+		switch (x.id) {
+			case 'b':
+				return h(
+					Handle,
+					{
+						id: 'b',
+						type: 'target',
+						position: Position.Left,
+						isValidConnection: simDatas.isValidConnection,
+						style: {
+							backgroundColor: 'red',
+						}
+					}
+				)
+			case 'c':
+				return h(
+					Handle,
+					{
+						id: 'c',
+						type: 'target',
+						position: Position.Bottom,
+						isValidConnection: simDatas.isValidConnection,
+						style: {
+							backgroundColor: 'red',
+						}
+					}
+				)
+			case 'd':
+				return h(
+					Handle,
+					{
+						id: 'd',
+						type: 'target',
+						position: Position.Top,
+						isValidConnection: simDatas.isValidConnection,
+						style: {
+							backgroundColor: 'red',
+						}
+					}
+				)
+		}
+	})
 }
 
 function SumSybol() {
-	if (show.value) {
-		return h(
-			'text',
-			{
-				x: "10",
-				y: "85",
-				class: 'sum-point-symbol'
-			},
-			'+'
-		)
-	} else {
-		simDatas.setNode(props.id, {
-			type: 'Sum',
-			args: {
-				symbol: opts.symbol
-			}
-		})
-		let num = opts.symbol.slice(1, -1).length
-		return ids.slice(0, num).map((x: any) => {
-			switch (x.id) {
-				case 'b':
-					return h(
-						'text',
-						{
-							x: "10",
-							y: "85",
-							class: 'sum-point-symbol'
-						},
-						opts.symbol[1]
-					)
-				case 'c':
-					return h(
-						'text',
-						{
-							x: "40",
-							y: "115",
-							class: 'sum-point-symbol'
-						},
-						opts.symbol[2]
-					)
-				case 'd':
-					return h(
-						'text',
-						{
-							x: "40",
-							y: "55",
-							class: 'sum-point-symbol'
-						},
-						opts.symbol[3]
-					)
-			}
-		})
-	}
+
+	simDatas.setNode(props.id, {
+		type: 'Sum',
+		args: {
+			symbol: opts.symbol
+		}
+	})
+	let num = opts.symbol.slice(1, -1).length
+	return ids.slice(0, num).map((x: any) => {
+		switch (x.id) {
+			case 'b':
+				return h(
+					'text',
+					{
+						x: "10",
+						y: "85",
+						class: 'sum-point-symbol'
+					},
+					opts.symbol[1]
+				)
+			case 'c':
+				return h(
+					'text',
+					{
+						x: "40",
+						y: "115",
+						class: 'sum-point-symbol'
+					},
+					opts.symbol[2]
+				)
+			case 'd':
+				return h(
+					'text',
+					{
+						x: "40",
+						y: "55",
+						class: 'sum-point-symbol'
+					},
+					opts.symbol[3]
+				)
+		}
+	})
 }
 </script>
 
 <template>
-	<NButton @dblclick="show = true" class="sum-point">
-		<Logo>
-			<template #handle>
-				<SumHandle />
-			</template>
-			<template #text>
-				<SumSybol />
-			</template>
-		</Logo>
-	</NButton>
-	<div>{{ props.id }}</div>
-	<n-drawer v-model:show="show" :width="502">
-		<n-drawer-content title="基本传函参数设置" closable>
-			<n-input v-model:value="opts.symbol" placeholder="[+]">
+	<base-container :id="props.id" border-width="0">
+		<template #component-logo>
+			<Logo>
+				<template #handle>
+					<SumHandle />
+				</template>
+				<template #text>
+					<SumSybol />
+				</template>
+			</Logo>
+		</template>
+		<template #component-set>
+			<el-input v-model:value="opts.symbol" placeholder="[+]">
 				<template #prefix>
 					和块节点符号:
 				</template>
-			</n-input>
-		</n-drawer-content>
-	</n-drawer>
+			</el-input>
+		</template>
+	</base-container>
 </template>

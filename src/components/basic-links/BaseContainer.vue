@@ -1,5 +1,5 @@
 ﻿<script setup lang="ts">
-import { reactive } from 'vue'
+import { computed, reactive, type ComputedRef, type CSSProperties } from 'vue'
 
 const props = defineProps({
 	id: {
@@ -22,6 +22,10 @@ const props = defineProps({
 		type: String,
 		default: 'drawer',
 	},
+	autoHeight: {
+		type: Boolean,
+		default: false,
+	}
 })
 
 const show = reactive({
@@ -40,22 +44,38 @@ const setShow = () => {
 	}
 }
 
+const containerStyle: ComputedRef<CSSProperties> = computed(() => {
+	let x: CSSProperties = {
+		borderWidth: props.borderWidth,
+		width: `${props.width}px`,
+	}
+	if (!props.autoHeight) {
+		x['height'] = `${props.height}px`
+	} else {
+		x['paddingTop'] = '10px'
+		x['paddingBottom'] = '10px'
+	}
+	return x
+})
+
+const containerBorderStyle: ComputedRef<CSSProperties> = computed(() => {
+	let x: CSSProperties = {
+		width: `${props.width + 6}px`,
+	}
+	if (!props.autoHeight) {
+		x['height'] = `${props.height + 6}px`
+	}
+	return x
+})
 </script>
 
 <template>
-	<div class="container-border" :style="{
-		width: `${props.width + 6}px`,
-		height: `${props.height + 6}px`,
-	}">
-		<div @dblclick="setShow" :style="{
-			width: `${props.width}px`,
-			height: `${props.height}px`,
-			'border-width': borderWidth,
-		}" class="base-container">
+	<div class="container-border" :style="containerBorderStyle">
+		<div @dblclick="setShow" :style="containerStyle" class="base-container">
 			<slot name="component-logo"></slot>
 		</div>
 	</div>
-	<!--  <div>{{ props.id }}</div>-->
+	<!-- <div>{{ props.id }}</div> -->
 	<el-drawer v-model="show.showDrawer" title="I am the title" :with-header="false" direction="rtl"
 		:append-to-body="true">
 		<slot name="component-set"></slot>
@@ -74,20 +94,18 @@ const setShow = () => {
 	border-color: #000000;
 	font-size: 40px;
 	background: #fdfefe;
-	justify-content: space-between;
+	justify-content: center;
 }
 
 .container-border {
 	display: flex;
-	/* 使用 Flexbox 布局 */
 	justify-content: center;
-	/* 水平居中 */
 	align-items: center;
-	/* 垂直居中 */
 	border-style: solid;
 	border-color: #00000000;
 	border-width: 2px;
 	padding: 2px;
+	margin-bottom: 5px;
 
 	&:hover {
 		border-color: var(--el-border-color-hover);

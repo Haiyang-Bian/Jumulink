@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { type IComponentInfo } from '@/utils/jumulink-types'
-import { useVueFlow, type Connection, type HandleElement } from '@vue-flow/core';
+import { MarkerType, useVueFlow, type Connection, type HandleElement } from '@vue-flow/core';
 import { isSum, matchIdNum, type IAjmatrix } from '@/utils/deal-request';
 
 export const useSimulaitionArgsStore = defineStore('simulationArgs', () => {
@@ -10,8 +10,34 @@ export const useSimulaitionArgsStore = defineStore('simulationArgs', () => {
 	const adjacencyMatrix = ref<IAjmatrix[]>([]);
 
 	// 连接图数据
-	const { getNodes, getEdges } = useVueFlow();
+	const {
+		findNode,
+		onConnect,
+		addEdges,
+		addNodes,
+		getNodes,
+		getEdges,
+		project,
+		vueFlowRef
+	} = useVueFlow()
 
+	// 连接线设置
+	onConnect((params) => {
+		const newpar = {
+			source: params.source,
+			target: params.target,
+			sourceHandle: params.sourceHandle,
+			targetHandle: params.targetHandle,
+			style: {
+				stroke: 'rgb(0,0,0)',
+				strokeWidth: '4px'
+			},
+			markerEnd: MarkerType.Arrow,
+		}
+		addEdges(newpar)
+	})
+
+	const IVueFlowRef = () => vueFlowRef
 
 	function setNode(id: string, node: IComponentInfo<any>) {
 		nodes.value[id] = node;
@@ -150,6 +176,12 @@ export const useSimulaitionArgsStore = defineStore('simulationArgs', () => {
 		setNode,
 		getNode,
 		isValidConnection,
-		getAdjacencyMatrix
+		getAdjacencyMatrix,
+		onConnect,
+		addEdges,
+		addNodes,
+		project,
+		IVueFlowRef,
+		findNode
 	}
 })

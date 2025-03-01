@@ -13,7 +13,7 @@ const props = defineProps<{ id: string }>()
 
 const simDatas = useSimulaitionArgsStore();
 
-const msg = ref<IComponentInfo>({
+const msg = ref<IComponentInfo<number>>({
 	type: 'I',
 	args: { Ti: 1 },
 })
@@ -22,6 +22,8 @@ onMounted(() => {
 	let value = simDatas.getNode(props.id)
 	if (value) {
 		msg.value = value
+	} else {
+		simDatas.setNode(props.id, msg.value)
 	}
 })
 </script>
@@ -29,7 +31,7 @@ onMounted(() => {
 <template>
 	<base-container :id="id">
 		<template #component-logo>
-			<p><strong>I</strong></p>
+			<strong>I</strong>
 			<Handle id="a" type="source" :position="Position.Right" :is-valid-connection="simDatas.isValidConnection"
 				:style="{
 					backgroundColor: 'blue'
@@ -40,7 +42,7 @@ onMounted(() => {
 				}" />
 		</template>
 		<template #component-set>
-			<el-input-number v-model:value="msg.args.Ti" placeholder="1">
+			<el-input-number v-model:value="(msg.args as Record<string, number>).Ti" placeholder="1">
 				<template #prefix>
 					积分时间常数:
 				</template>

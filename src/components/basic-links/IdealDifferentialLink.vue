@@ -22,6 +22,8 @@ onMounted(() => {
 	let value = simDatas.getNode(props.id)
 	if (value) {
 		msg.value = value
+	} else {
+		simDatas.setNode(props.id, msg.value)
 	}
 })
 </script>
@@ -29,7 +31,7 @@ onMounted(() => {
 <template>
 	<base-container :id="id">
 		<template #component-set>
-			<el-input-number v-model="msg.args.Td" placeholder="1">
+			<el-input-number v-model="(msg.args as Record<string, number>).Td" placeholder="1">
 				<template #prefix>
 					微分时间常数:
 				</template>

@@ -25,6 +25,8 @@ onMounted(() => {
 	let value = simDatas.getNode(props.id)
 	if (value) {
 		msg.value = value
+	} else {
+		simDatas.setNode(props.id, msg.value)
 	}
 })
 </script>
@@ -47,7 +49,7 @@ onMounted(() => {
 				}" />
 		</template>
 		<template #component-set>
-			<el-input-number v-model:value="msg.args.Kp" placeholder="1">
+			<el-input-number v-model:value="(msg.args as Record<string, number>).Kp" placeholder="1">
 				<template #prefix>
 					比例系数:
 				</template>

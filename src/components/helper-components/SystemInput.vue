@@ -28,8 +28,9 @@ onMounted(() => {
 	let value = simDatas.getNode(props.id)
 	if (value) {
 		msg.value = value
+	} else {
+		simDatas.setNode(props.id, msg.value)
 	}
-	simDatas.setNode(props.id, msg.value)
 })
 
 const options = [
