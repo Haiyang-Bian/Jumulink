@@ -1,14 +1,13 @@
 <script setup lang="ts">
+import { useSimulationResultsStore } from '@/stores/simulation-results';
 import { ElTabPane } from 'element-plus';
-import SimulatorBox from './SimulatorBox.vue'
-import { inject, type Ref, ref } from 'vue';
-const show = inject('show') as Ref
+import { ref } from 'vue';
+
 const activeName = ref('lib')
 function onDragStart(event: any, nodeType: any) {
 	if (event.dataTransfer) {
 		event.dataTransfer.setData('application/vueflow', nodeType)
 		event.dataTransfer.effectAllowed = 'move'
-		show.value = false
 	}
 }
 </script>
@@ -56,7 +55,7 @@ function onDragStart(event: any, nodeType: any) {
 			</div>
 		</el-tab-pane>
 		<el-tab-pane label="仿真设置" name="simulation">
-			<simulator-box />
+			<el-button @click="useSimulationResultsStore().simulationStart">按下以开始仿真!</el-button>
 		</el-tab-pane>
 	</el-tabs>
 </template>

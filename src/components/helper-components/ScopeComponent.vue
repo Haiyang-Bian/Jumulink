@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Handle, Position } from '@vue-flow/core'
-import { NButton, useMessage, NScrollbar } from 'naive-ui'
+import { useMessage, NScrollbar } from 'naive-ui'
 import { h, nextTick, onMounted, ref } from 'vue';
 import * as echarts from 'echarts/core';
 import { LineChart } from 'echarts/charts';
@@ -41,6 +41,7 @@ const simResult = useSimulationResultsStore();
 const multiGraph = ref(false)
 
 const msg = useMessage()
+
 function Scope() {
 	if (simResult.done) {
 		let data = simResult.getResultDatas(props.id)
@@ -60,7 +61,7 @@ function Scope() {
 									},
 									tooltip: {},
 									xAxis: {
-										data: []
+										data: simResult.getTimes
 									},
 									yAxis: {},
 									series: [d]
@@ -88,7 +89,7 @@ function Scope() {
 								},
 								tooltip: {},
 								xAxis: {
-									data: []
+									data: simResult.getTimes
 								},
 								yAxis: {},
 								series: data
@@ -138,8 +139,8 @@ onMounted(() => {
 		</template>
 		<template #component-show>
 			<Scope />
-			<n-button @click="multiGraph = false">单图显示</n-button>
-			<n-button @click="multiGraph = true">分图显示</n-button>
+			<el-button @click="multiGraph = false">单图显示</el-button>
+			<el-button @click="multiGraph = true">分图显示</el-button>
 		</template>
 	</base-container>
 </template>
