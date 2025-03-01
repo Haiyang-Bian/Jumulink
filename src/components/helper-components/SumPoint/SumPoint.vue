@@ -1,28 +1,24 @@
 <script setup lang="ts">
 import { Handle, Position } from '@vue-flow/core'
-import { h, inject, reactive, ref, type Ref } from 'vue';
+import { h, reactive, ref } from 'vue';
 import { NDrawer, NDrawerContent, NInput, NButton, useMessage } from 'naive-ui'
 import Logo from './SumPointLogo.vue'
-import Func from '@/utils/some-funcs'
+import { useSimulaitionArgsStore } from '@/stores/simulation-args';
+
+defineOptions({
+	inheritAttrs: false
+})
 
 const show = ref(false)
-const nodes = inject('sysNodes') as any
-const props = defineProps({
-	id: {
-		type: String,
-		required: true,
-	}
-})
-const simArgs = inject('simArgs') as Ref<{
-	start: boolean,
-	nodes: Map<string, any>,
-	adjacencyMatrix: Array<any>
-}>
+
+const props = defineProps<{ id: string }>()
+
+const simDatas = useSimulaitionArgsStore();
+
 const opts = reactive({
 	label: 'SumPoint',
 	symbol: '[+]'
 })
-simArgs.value.nodes.set(props.id, opts.symbol)
 
 const ids = [
 	{
@@ -44,16 +40,17 @@ function SumHandle() {
 			id: "b",
 			type: 'source',
 			position: Position.Left,
-			isValidConnection: (conn) => Func(conn, nodes.value),
+			isValidConnection: simDatas.isValidConnection,
 			style: {
 				backgroundColor: 'blue',
 			}
 		})
 	} else {
-		simArgs.value.nodes.delete(props.id)
-		simArgs.value.nodes.set(props.id, {
+		simDatas.setNode(props.id, {
 			type: 'Sum',
-			symbol: opts.symbol
+			args: {
+				symbol: opts.symbol
+			}
 		})
 		let num = opts.symbol.slice(1, -1).length
 		if (num > 3) {
@@ -70,7 +67,7 @@ function SumHandle() {
 							id: 'b',
 							type: 'target',
 							position: Position.Left,
-							isValidConnection: (conn) => Func(conn, nodes.value),
+							isValidConnection: simDatas.isValidConnection,
 							style: {
 								backgroundColor: 'red',
 							}
@@ -83,7 +80,7 @@ function SumHandle() {
 							id: 'c',
 							type: 'target',
 							position: Position.Bottom,
-							isValidConnection: (conn) => Func(conn, nodes.value),
+							isValidConnection: simDatas.isValidConnection,
 							style: {
 								backgroundColor: 'red',
 							}
@@ -96,7 +93,7 @@ function SumHandle() {
 							id: 'd',
 							type: 'target',
 							position: Position.Top,
-							isValidConnection: (conn) => Func(conn, nodes.value),
+							isValidConnection: simDatas.isValidConnection,
 							style: {
 								backgroundColor: 'red',
 							}
@@ -119,10 +116,11 @@ function SumSybol() {
 			'+'
 		)
 	} else {
-		simArgs.value.nodes.delete(props.id)
-		simArgs.value.nodes.set(props.id, {
+		simDatas.setNode(props.id, {
 			type: 'Sum',
-			symbol: opts.symbol
+			args: {
+				symbol: opts.symbol
+			}
 		})
 		let num = opts.symbol.slice(1, -1).length
 		return ids.slice(0, num).map((x: any) => {
@@ -167,10 +165,10 @@ function SumSybol() {
 	<NButton @dblclick="show = true" class="sum-point">
 		<Logo>
 			<template #handle>
-				<SumHandle/>
+				<SumHandle />
 			</template>
 			<template #text>
-				<SumSybol/>
+				<SumSybol />
 			</template>
 		</Logo>
 	</NButton>

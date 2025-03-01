@@ -1,10 +1,10 @@
 ﻿// 全局使用的类型定义
 
 export interface IBaseInfo {
-  name: string,
+	name: string,
 }
 
-export interface IComponentInfo {
-  type: string,
-  args: Record<string, string>
+export interface IComponentInfo<T> {
+	type: string,
+	args: Record<string, T> | undefined
 }

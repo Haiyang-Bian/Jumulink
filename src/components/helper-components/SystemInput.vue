@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { Handle, Position } from '@vue-flow/core'
-import { NButton, NInput, NPopselect } from 'naive-ui'
-import { ref, onMounted, type Ref } from 'vue'
-import Func from '@/utils/some-funcs'
+import { NButton, NPopselect } from 'naive-ui'
+import { ref, onMounted } from 'vue'
 import { BaseContainer } from '@/components/basic-links'
 import { type IComponentInfo } from '@/utils/jumulink-types'
 import { useSimulaitionArgsStore } from '@/stores/simulation-args'
@@ -15,11 +14,11 @@ const props = defineProps<{ id: string }>()
 
 const simDatas = useSimulaitionArgsStore();
 
-const msg: Ref<IComponentInfo> = ref<IComponentInfo>({
+const msg = ref<IComponentInfo<number>>({
 	type: '阶跃输入',
 	args: {
-		K: '1',
-		t: '0'
+		K: 1,
+		t: 0
 	}
 })
 
@@ -30,6 +29,7 @@ onMounted(() => {
 	if (value) {
 		msg.value = value
 	}
+	simDatas.setNode(props.id, msg.value)
 })
 
 const options = [
@@ -55,8 +55,8 @@ function CallBack() {
 	<base-container :id="id">
 		<template #component-logo>
 			<p><strong>系统输入</strong></p>
-			<Handle id="a" type="source" :position="Position.Right"
-				:is-valid-connection="(conn) => Func(conn, simDatas.nodes)" :style="{
+			<Handle id="a" type="source" :position="Position.Right" :is-valid-connection="simDatas.isValidConnection"
+				:style="{
 					backgroundColor: 'blue',
 				}" />
 		</template>
@@ -64,16 +64,16 @@ function CallBack() {
 			<n-popselect v-model:value="value" :options="options" trigger="click" @click="CallBack">
 				<n-button>{{ value || '弹出选择' }}</n-button>
 			</n-popselect>
-			<n-input v-model:value="msg.args.K" placeholder="1">
+			<el-input-number v-model:value="(msg.args as Record<string, number>).K" placeholder="1">
 				<template #prefix>
 					比例系数:
 				</template>
-			</n-input>
-			<n-input v-model:value="msg.args.t" placeholder="1">
+			</el-input-number>
+			<el-input-number v-model:value="(msg.args as Record<string, number>).t" placeholder="1">
 				<template #prefix>
 					阶跃时间:
 				</template>
-			</n-input>
+			</el-input-number>
 		</template>
 	</base-container>
 </template>
