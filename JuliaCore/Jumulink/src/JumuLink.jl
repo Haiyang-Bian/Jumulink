@@ -2,6 +2,7 @@ module JumuLink
 
 using DifferentialEquations, Dierckx
 using Oxygen, HTTP
+import HTTP.WebSockets.send
 
 include("Polynomial.jl")
 include("SymbolTest.jl")

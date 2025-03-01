@@ -35,9 +35,9 @@ onMounted(() => {
 	<base-container :id="id" border-width="0">
 		<template #component-logo>
 			<svg xmlns="http://www.w3.org/2000/svg">
-				<polygon points="2,25 2,125 102,75"
+				<polygon points="2,2 2,98 98,50"
 					style="stroke: rgb(23, 193, 105); stroke-width: 4px; fill: rgb(255, 255, 255);" />
-				<text x="35" y="85">P</text>
+				<text x="25" y="65">P</text>
 			</svg>
 			<Handle id="a" type="source" :position="Position.Right" :is-valid-connection="simDatas.isValidConnection"
 				:style="{
@@ -49,7 +49,7 @@ onMounted(() => {
 				}" />
 		</template>
 		<template #component-set>
-			<el-input-number v-model:value="(msg.args as Record<string, number>).Kp" placeholder="1">
+			<el-input-number v-model="(msg.args as Record<string, any>).Kp" placeholder="1">
 				<template #prefix>
 					比例系数:
 				</template>

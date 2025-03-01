@@ -7,7 +7,8 @@ export function useDragAndDrop() {
 
 	let id = 0
 
-	const { addNodes, findNode, project, IVueFlowRef } = useSimulaitionArgsStore();
+	const simDatas = useSimulaitionArgsStore();
+	const { addNodes, findNode, project } = simDatas.systemGraph;
 
 	function getId() {
 		return `node_${id++}`
@@ -21,7 +22,7 @@ export function useDragAndDrop() {
 	}
 	function onDrop(event: DragEvent) {
 		const type = event.dataTransfer?.getData('application/vueflow')
-		const { left, top } = (IVueFlowRef().value as HTMLDivElement).getBoundingClientRect()
+		const { left, top } = (simDatas.IVueFlowRef().value as HTMLDivElement).getBoundingClientRect()
 		const position = project({
 			x: event.clientX - left,
 			y: event.clientY - top,

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Handle, Position } from '@vue-flow/core'
-import { NInput } from 'naive-ui'
 import { onMounted, ref } from 'vue';
 import BaseContainer from '@/components/basic-links/BaseContainer.vue'
 import { useSimulaitionArgsStore } from '@/stores/simulation-args';
@@ -46,16 +45,16 @@ onMounted(() => {
 				}" />
 		</template>
 		<template #component-set>
-			<n-input v-model:value="(msg.args as Record<string, string>).num" placeholder="[0]">
+			<el-input v-model="(msg.args as Record<string, string>).num" placeholder="[0]">
 				<template #prefix>
 					分子多项式系数:
 				</template>
-			</n-input>
-			<n-input v-model:value="(msg.args as Record<string, string>).den" placeholder="[1]">
+			</el-input>
+			<el-input v-model="(msg.args as Record<string, string>).den" placeholder="[1]">
 				<template #prefix>
 					分母多项式系数:
 				</template>
-			</n-input>
+			</el-input>
 		</template>
 	</base-container>
 </template>

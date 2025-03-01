@@ -65,12 +65,12 @@ function CallBack() {
 			<n-popselect v-model:value="value" :options="options" trigger="click" @click="CallBack">
 				<n-button>{{ value || '弹出选择' }}</n-button>
 			</n-popselect>
-			<el-input-number v-model:value="(msg.args as Record<string, number>).K" placeholder="1">
+			<el-input-number v-model="(msg.args as Record<string, number>).K" placeholder="1">
 				<template #prefix>
 					比例系数:
 				</template>
 			</el-input-number>
-			<el-input-number v-model:value="(msg.args as Record<string, number>).t" placeholder="1">
+			<el-input-number v-model="(msg.args as Record<string, number>).t" placeholder="1">
 				<template #prefix>
 					阶跃时间:
 				</template>

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { Handle, Position } from '@vue-flow/core'
 import { h, reactive } from 'vue';
-import { NInput, useMessage } from 'naive-ui'
 import { BaseContainer } from '../basic-links';
 import { useSimulaitionArgsStore } from '@/stores/simulation-args';
+import { useMessage } from 'naive-ui';
 
 defineOptions({
 	inheritAttrs: false
@@ -111,11 +111,11 @@ function SumNode() {
 			<sum-node />
 		</template>
 		<template #component-set>
-			<n-input v-model:value="opts.symbol" placeholder="[+]">
+			<el-input v-model="opts.symbol" placeholder="[+]">
 				<template #prefix>
 					和块节点符号:
 				</template>
-			</n-input>
+			</el-input>
 		</template>
 	</base-container>
 </template>

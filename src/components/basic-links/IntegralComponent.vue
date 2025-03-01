@@ -42,7 +42,7 @@ onMounted(() => {
 				}" />
 		</template>
 		<template #component-set>
-			<el-input-number v-model:value="(msg.args as Record<string, number>).Ti" placeholder="1">
+			<el-input-number v-model="(msg.args as Record<string, number>).Ti" placeholder="1">
 				<template #prefix>
 					积分时间常数:
 				</template>

@@ -14,10 +14,17 @@ function core_middleware(handler)
     end
 end
 
-@post "/jumulink" function (req::HTTP.Request)
+@post "/connect" function (req::HTTP.Request)
     # 理想PID控制器
     input = json(req, Dict)
     return ControlSystem(input)
+end
+
+@websocket "/jumulink" function (ws::HTTP.WebSocket)
+    for msg in ws
+        @info "Received message: $msg"
+        send(ws, "The time is: $(now())")
+    end
 end
 
 # 异步启动服务器

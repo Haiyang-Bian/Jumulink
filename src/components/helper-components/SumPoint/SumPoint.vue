@@ -5,6 +5,7 @@ import { useMessage } from 'naive-ui'
 import Logo from './SumPointLogo.vue'
 import { useSimulaitionArgsStore } from '@/stores/simulation-args';
 import BaseContainer from '@/components/basic-links/BaseContainer.vue';
+import { ElInput } from 'element-plus';
 
 defineOptions({
 	inheritAttrs: false
@@ -16,7 +17,7 @@ const simDatas = useSimulaitionArgsStore();
 
 const opts = reactive({
 	label: 'SumPoint',
-	symbol: '[+]'
+	symbol: '[+++]'
 })
 
 const ids = [
@@ -92,7 +93,7 @@ function SumHandle() {
 	})
 }
 
-function SumSybol() {
+function SumSymbol() {
 
 	simDatas.setNode(props.id, {
 		type: 'Sum',
@@ -108,7 +109,7 @@ function SumSybol() {
 					'text',
 					{
 						x: "10",
-						y: "85",
+						y: "60",
 						class: 'sum-point-symbol'
 					},
 					opts.symbol[1]
@@ -118,7 +119,7 @@ function SumSybol() {
 					'text',
 					{
 						x: "40",
-						y: "115",
+						y: "92",
 						class: 'sum-point-symbol'
 					},
 					opts.symbol[2]
@@ -128,7 +129,7 @@ function SumSybol() {
 					'text',
 					{
 						x: "40",
-						y: "55",
+						y: "28",
 						class: 'sum-point-symbol'
 					},
 					opts.symbol[3]
@@ -146,12 +147,12 @@ function SumSybol() {
 					<SumHandle />
 				</template>
 				<template #text>
-					<SumSybol />
+					<SumSymbol />
 				</template>
 			</Logo>
 		</template>
 		<template #component-set>
-			<el-input v-model:value="opts.symbol" placeholder="[+]">
+			<el-input v-model="opts.symbol" placeholder="[+]">
 				<template #prefix>
 					和块节点符号:
 				</template>

@@ -1,9 +1,8 @@
 import { useSimulaitionArgsStore } from "@/stores/simulation-args";
-import { useVueFlow } from "@vue-flow/core"
 import { nextTick, ref } from "vue"
 export function useContextMenu() {
-	const { onEdgeContextMenu, onNodeContextMenu, removeEdges, removeNodes } = useVueFlow();
 	const simDatas = useSimulaitionArgsStore();
+	const { onEdgeContextMenu, onNodeContextMenu, removeEdges, removeNodes } = simDatas.systemGraph;
 
 	// 右键菜单依赖项
 	const showDropdownRef = ref(false)

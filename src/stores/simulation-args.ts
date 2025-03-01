@@ -10,16 +10,10 @@ export const useSimulaitionArgsStore = defineStore('simulationArgs', () => {
 	const adjacencyMatrix = ref<IAjmatrix[]>([]);
 
 	// 连接图数据
-	const {
-		findNode,
-		onConnect,
-		addEdges,
-		addNodes,
-		getNodes,
-		getEdges,
-		project,
-		vueFlowRef
-	} = useVueFlow()
+	const systemGraph = useVueFlow();
+	const { onConnect, addEdges, getNodes, getEdges, vueFlowRef } = systemGraph;
+
+	const IVueFlowRef = () => vueFlowRef
 
 	// 连接线设置
 	onConnect((params) => {
@@ -36,8 +30,6 @@ export const useSimulaitionArgsStore = defineStore('simulationArgs', () => {
 		}
 		addEdges(newpar)
 	})
-
-	const IVueFlowRef = () => vueFlowRef
 
 	function setNode(id: string, node: IComponentInfo<any>) {
 		nodes.value[id] = node;
@@ -173,15 +165,11 @@ export const useSimulaitionArgsStore = defineStore('simulationArgs', () => {
 
 	return {
 		start, nodes, adjacencyMatrix,
+		systemGraph,
+		IVueFlowRef,
 		setNode,
 		getNode,
 		isValidConnection,
 		getAdjacencyMatrix,
-		onConnect,
-		addEdges,
-		addNodes,
-		project,
-		IVueFlowRef,
-		findNode
 	}
 })
