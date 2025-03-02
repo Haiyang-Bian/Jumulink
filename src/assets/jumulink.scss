@@ -151,7 +151,12 @@ body,
 }
 
 .menu {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 	text-align: center;
+	text-wrap: wrap;
 	border-width: 4px;
 	border-style: solid;
 	border-color: #060306;
@@ -160,6 +165,10 @@ body,
 	width: 100px;
 	height: 100px;
 	background: #fdfefe;
+
+	p {
+		text-wrap: wrap;
+	}
 }
 
 .sum-point-symbol {

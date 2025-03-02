@@ -39,7 +39,6 @@ onMounted(async () => {
 	} else {
 		ElMessage.error('连接失败');
 	}
-	simResult.connectServer(true)
 });
 </script>
 

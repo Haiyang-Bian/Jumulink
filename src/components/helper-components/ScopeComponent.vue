@@ -134,7 +134,7 @@ onMounted(() => {
 		args: undefined
 	})">
 		<template #component-logo>
-			<p><strong>示波器</strong></p>
+			<p style="font-size: 20px;">示波器</p>
 			<Handle id="b" type="target" :position="Position.Left" :is-valid-connection="simDatas.isValidConnection"
 				:style="{
 					backgroundColor: 'red'

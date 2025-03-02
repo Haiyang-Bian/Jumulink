@@ -24,10 +24,9 @@ function isSum(id: string, arr: GraphNode<any, any, string>[]) {
 
 async function connectServer() {
 	return await axios.get('/connect').then(() => {
-		console.log('connect server')
 		return true
 	}).catch(() => {
-		console.log('connect server fail')
+		console.log('连接失败！')
 		return false
 	})
 }

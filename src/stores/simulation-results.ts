@@ -46,7 +46,6 @@ export const useSimulationResultsStore = defineStore('simulationResults', () => 
 				console.log('连接成功');
 			};
 			calculationServer.value.onmessage = (event: MessageEvent) => {
-				console.log(event.data.toString());
 				const data: IResultDatas = JSON.parse(event.data.toString());
 				done.value = true;
 				resultDatas.value = data
