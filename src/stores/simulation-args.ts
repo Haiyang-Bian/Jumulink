@@ -1,8 +1,8 @@
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
-import { type IComponentInfo } from '@/utils/jumulink-types'
+import { type IComponentInfo, type IAjmatrix, type ICalcInfo } from '@/utils/jumulink-types'
 import { MarkerType, useVueFlow, type Connection, type HandleElement } from '@vue-flow/core';
-import { isSum, matchIdNum, type IAjmatrix } from '@/utils/deal-request';
+import { isSum, matchIdNum } from '@/utils/deal-request';
 
 export const useSimulaitionArgsStore = defineStore('simulationArgs', () => {
 	const start = ref(false);
@@ -14,6 +14,13 @@ export const useSimulaitionArgsStore = defineStore('simulationArgs', () => {
 	const { onConnect, addEdges, getNodes, getEdges, vueFlowRef } = systemGraph;
 
 	const IVueFlowRef = () => vueFlowRef
+
+	const calculation = computed<ICalcInfo>(() => {
+		return {
+			nodes: nodes.value,
+			map: adjacencyMatrix.value
+		}
+	})
 
 	// 连接线设置
 	onConnect((params) => {
@@ -165,6 +172,7 @@ export const useSimulaitionArgsStore = defineStore('simulationArgs', () => {
 
 	return {
 		start, nodes, adjacencyMatrix,
+		calculation,
 		systemGraph,
 		IVueFlowRef,
 		setNode,

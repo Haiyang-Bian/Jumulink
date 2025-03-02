@@ -1,14 +1,18 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
-import axios from 'axios';
 import type { IResultDatas } from '@/utils/jumulink-types';
 import { useSimulaitionArgsStore } from './simulation-args';
+import { BACKEND_URL } from '@/utils/config';
+import { ElMessage } from 'element-plus';
 
 export const useSimulationResultsStore = defineStore('simulationResults', () => {
 
 	const simDatas = useSimulaitionArgsStore();
 
-	const done = ref(false);
+	const calculationServer = ref<WebSocket | null>(null)
+
+	const done = ref(true);
+
 	const resultDatas = ref<IResultDatas>({
 		x: [],
 		ans: {}
@@ -35,35 +39,35 @@ export const useSimulationResultsStore = defineStore('simulationResults', () => 
 		return newans
 	}
 
-	function sendMsg() {
-		const request = axios.create({
-			timeout: 5000
-		})
-		const config = {
-			headers: { 'Content-Type': "multipart/json, charset=UTF-8" }
+	function connectServer(isServerExists: boolean) {
+		if (isServerExists) {
+			calculationServer.value = new WebSocket(`ws://${BACKEND_URL}/calculation`)
+			calculationServer.value.onopen = () => {
+				console.log('连接成功');
+			};
+			calculationServer.value.onmessage = (event: MessageEvent) => {
+				console.log(event.data.toString());
+				const data: IResultDatas = JSON.parse(event.data.toString());
+				done.value = true;
+				resultDatas.value = data
+				console.log(data);
+			};
+			calculationServer.value.onclose = (e) => {
+				console.log('连接关闭', e);
+			};
+			calculationServer.value.onerror = () => {
+				ElMessage.error('服务器连接失败，请检查服务器是否开启')
+			};
 		}
-		const jsonobj: Record<string, any> = {}
-		Object.entries(simDatas.nodes).forEach((v) => {
-			jsonobj[v[0]] = v[1]
-		})
-		request.post('/jumulink', {
-			nodes: jsonobj,
-			map: simDatas.adjacencyMatrix
-		}, config)
-			.then((response: { data: IResultDatas; }) => {
-				done.value = true
-				resultDatas.value = response.data
-				console.log(response.data);
-			})
-			.catch((error: any) => {
-				console.log(error);
-			});
+		return
 	}
 
 	function simulationStart() {
 		done.value = false;
 		simDatas.getAdjacencyMatrix()
-		sendMsg()
+		if (calculationServer.value != null) {
+			calculationServer.value.send(JSON.stringify(simDatas.calculation))
+		}
 	}
 
 	return {
@@ -71,6 +75,7 @@ export const useSimulationResultsStore = defineStore('simulationResults', () => 
 		resultDatas,
 		getTimes,
 		getResultDatas,
+		connectServer,
 		simulationStart
 	}
 })

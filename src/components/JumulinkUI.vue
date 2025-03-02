@@ -3,14 +3,16 @@ import { VueFlow } from '@vue-flow/core'
 import { MiniMap } from '@vue-flow/minimap';
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
-import { markRaw } from 'vue';
+import { markRaw, onMounted } from 'vue';
 import { NMessageProvider, NDropdown } from 'naive-ui';
 import { IDlink, ADlink, Tf, Ilink, Plink } from './basic-links';
 import { Input, SumBlock, Scope, SumPoint } from './helper-components';
 import { SideBar } from './ui-components';
-import { ElAside, ElMain } from 'element-plus';
+import { ElAside, ElMain, ElMessage } from 'element-plus';
 import { useContextMenu } from '@/utils/deal-context-menu';
 import { useDragAndDrop } from '@/utils/darg-drop';
+import { connectServer } from '@/utils/deal-request';
+import { useSimulationResultsStore } from '@/stores/simulation-results';
 
 
 // 组件类型登记
@@ -28,7 +30,17 @@ const nodeTypes: Record<string, any> = {
 
 const { xRef, yRef, showDropdownRef, getMXY, options, handleSelect } = useContextMenu();
 const { onDrop, onDragOver } = useDragAndDrop();
+const simResult = useSimulationResultsStore();
 
+onMounted(async () => {
+	if (await connectServer()) {
+		ElMessage.success('连接成功');
+		simResult.connectServer(true)
+	} else {
+		ElMessage.error('连接失败');
+	}
+	simResult.connectServer(true)
+});
 </script>
 
 <template>

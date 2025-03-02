@@ -1,10 +1,6 @@
 import type { GraphNode } from "@vue-flow/core"
-
-interface IAjmatrix {
-	nid: string,
-	nnum: number,
-	nnodes: number[],
-}
+import type { IAjmatrix } from "./jumulink-types"
+import axios from "axios";
 
 function matchIdNum(id: string, arr: IAjmatrix[]) {
 	for (const a of arr) {
@@ -26,4 +22,14 @@ function isSum(id: string, arr: GraphNode<any, any, string>[]) {
 	return false
 }
 
-export { type IAjmatrix, matchIdNum, isSum }
+async function connectServer() {
+	return await axios.get('/connect').then(() => {
+		console.log('connect server')
+		return true
+	}).catch(() => {
+		console.log('connect server fail')
+		return false
+	})
+}
+
+export { matchIdNum, isSum, connectServer }

@@ -27,7 +27,7 @@ function pretreatment(input::Dict)
             push!(link, Sum(order))
             order += 1
         elseif msg["type"] == "TransFunction"
-            push!(link, Tf(order, Fraction(eval(Meta.parse(msg["num"])), eval(Meta.parse(msg["den"])))))
+            push!(link, Tf(order, Fraction(eval(Meta.parse(msg["args"]["num"])), eval(Meta.parse(msg["args"]["den"])))))
             order += 1
         elseif msg["type"] in ["阶跃输入", "斜坡输入", "抛物线输入"]
             push!(link, Input(order, (x) -> basic_input(msg["type"], Meta.parse(msg["args"]["K"]), Meta.parse(msg["args"]["t"]), x)))
@@ -36,16 +36,16 @@ function pretreatment(input::Dict)
             push!(link, Output(order))
             order += 1
         elseif msg["type"] == "P"
-            push!(link, Tf(order, Fraction([Meta.parse(msg["Kp"])], [1])))
+            push!(link, Tf(order, Fraction([Meta.parse(msg["args"]["Kp"])], [1])))
             order += 1
         elseif msg["type"] == "I"
-            push!(link, Tf(order, Fraction([1], [0, Meta.parse(msg["Ti"])])))
+            push!(link, Tf(order, Fraction([1], [0, Meta.parse(msg["args"]["Ti"])])))
             order += 1
         elseif msg["type"] == "D_I"
-            push!(link, Tf(order, Fraction([0, Meta.parse(msg["Td"])], [1])))
+            push!(link, Tf(order, Fraction([0, Meta.parse(msg["args"]["Td"])], [1])))
             order += 1
         elseif msg["type"] == "D_A"
-            push!(link, Tf(order, Fraction([0, Meta.parse(msg["Td"]) * Meta.parse(msg["kd"])], [1, Meta.parse(msg["Td"])])))
+            push!(link, Tf(order, Fraction([0, Meta.parse(msg["args"]["Td"]) * Meta.parse(msg["args"]["kd"])], [1, Meta.parse(msg["args"]["Td"])])))
             order += 1
         end
     end
