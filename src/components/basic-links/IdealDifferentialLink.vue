@@ -29,7 +29,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<base-container :id="id">
+	<base-container :id="id" @set-args="simDatas.setNode(id, msg)">
 		<template #component-set>
 			<el-input-number v-model="(msg.args as Record<string, number>).Td" placeholder="1">
 				<template #prefix>

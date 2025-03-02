@@ -33,7 +33,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<base-container :id="id">
+	<base-container :id="id" @set-args="simDatas.setNode(id, msg)">
 		<template #component-logo>
 			<strong>D</strong>
 			<p style="font-size: 15px; margin-top: 0">实际微分环节</p>
@@ -48,16 +48,14 @@ onMounted(() => {
 				}" />
 		</template>
 		<template #component-set>
-			<el-input-number v-model="(msg.args as Record<string, number>).kd" placeholder=1>
-				<template #prefix>
-					比例系数:
-				</template>
-			</el-input-number>
-			<el-input-number v-model="(msg.args as Record<string, number>).Td" placeholder=1>
-				<template #prefix>
-					微分时间常数:
-				</template>
-			</el-input-number>
+			<span>
+				<el-text>比例系数：</el-text>
+				<el-input-number v-model="(msg.args as Record<string, number>).kd" placeholder=1 />
+			</span>
+			<span>
+				<el-text>微分时间常数：</el-text>
+				<el-input-number v-model="(msg.args as Record<string, number>).Td" placeholder=1 />
+			</span>
 		</template>
 	</base-container>
 </template>

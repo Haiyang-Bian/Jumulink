@@ -32,7 +32,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<base-container :id="id">
+	<base-container :id="id" @set-args="simDatas.setNode(id, msg)">
 		<template #component-logo>
 			<p><strong>G</strong></p>
 			<Handle id="a" type="source" :position="Position.Right" :is-valid-connection="simDatas.isValidConnection"

@@ -28,6 +28,8 @@ const props = defineProps({
 	}
 })
 
+const emit = defineEmits(['setArgs'])
+
 const show = reactive({
 	showDialog: false,
 	showDrawer: false
@@ -74,11 +76,13 @@ const containerBorderStyle: ComputedRef<CSSProperties> = computed(() => {
 		<div @dblclick="setShow" :style="containerStyle" class="base-container">
 			<slot name="component-logo"></slot>
 		</div>
+		<div class="container-id">{{ props.id }}</div>
 	</div>
-	<!-- <div>{{ props.id }}</div> -->
 	<el-drawer v-model="show.showDrawer" title="I am the title" :with-header="false" direction="rtl"
-		:append-to-body="true">
-		<slot name="component-set"></slot>
+		:append-to-body="true" @closed="() => emit('setArgs')">
+		<div class="drawer-content">
+			<slot name="component-set"></slot>
+		</div>
 	</el-drawer>
 	<el-dialog v-model="show.showDialog" title="Tips" width="500" :append-to-body="true">
 		<slot name="component-show"></slot>
@@ -111,5 +115,19 @@ const containerBorderStyle: ComputedRef<CSSProperties> = computed(() => {
 		border-color: var(--el-border-color-hover);
 		border-style: dashed;
 	}
+
+	.container-id {
+		position: absolute;
+		font-size: 12px;
+		bottom: -15px;
+	}
+}
+
+.drawer-content {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: left;
+	gap: 10px;
 }
 </style>

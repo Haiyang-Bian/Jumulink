@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { Handle, Position } from '@vue-flow/core'
-import { NButton, NPopselect } from 'naive-ui'
 import { ref, onMounted } from 'vue'
 import { BaseContainer } from '@/components/basic-links'
 import { type IComponentInfo } from '@/utils/jumulink-types'
 import { useSimulaitionArgsStore } from '@/stores/simulation-args'
+import { ElText, ElSelect, ElOption } from 'element-plus'
 
 defineOptions({
 	inheritAttrs: false
@@ -47,34 +47,29 @@ const options = [
 		value: '抛物线输入'
 	}
 ]
-function CallBack() {
-	simDatas.setNode(props.id, msg.value)
-}
 </script>
 
 <template>
-	<base-container :id="id">
+	<base-container :id="id" @set-args="simDatas.setNode(id, msg)">
 		<template #component-logo>
-			<p><strong>系统输入</strong></p>
+			<p style="font-size: 20px;">系统输入</p>
 			<Handle id="a" type="source" :position="Position.Right" :is-valid-connection="simDatas.isValidConnection"
 				:style="{
 					backgroundColor: 'blue',
 				}" />
 		</template>
 		<template #component-set>
-			<n-popselect v-model:value="value" :options="options" trigger="click" @click="CallBack">
-				<n-button>{{ value || '弹出选择' }}</n-button>
-			</n-popselect>
-			<el-input-number v-model="(msg.args as Record<string, number>).K" placeholder="1">
-				<template #prefix>
-					比例系数:
-				</template>
-			</el-input-number>
-			<el-input-number v-model="(msg.args as Record<string, number>).t" placeholder="1">
-				<template #prefix>
-					阶跃时间:
-				</template>
-			</el-input-number>
+			<el-select v-model="value" placeholder="Select" size="large" style="width: 240px">
+				<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+			</el-select>
+			<span>
+				<el-text>比例系数:</el-text>
+				<el-input-number v-model="(msg.args as Record<string, number>).K" placeholder="1" />
+			</span>
+			<span>
+				<el-text>阶跃时间:</el-text>
+				<el-input-number v-model="(msg.args as Record<string, number>).t" placeholder="1" />
+			</span>
 		</template>
 	</base-container>
 </template>

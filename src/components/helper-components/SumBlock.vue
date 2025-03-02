@@ -106,7 +106,12 @@ function SumNode() {
 </script>
 
 <template>
-	<base-container :id="id" :auto-height="true">
+	<base-container :id="id" :auto-height="true" @set-args="simDatas.setNode(id, {
+		type: 'Sum',
+		args: {
+			symbol: opts.symbol
+		}
+	})">
 		<template #component-logo>
 			<sum-node />
 		</template>

@@ -129,7 +129,10 @@ onMounted(() => {
 </script>
 
 <template>
-	<base-container :id="id" set-type="dialog">
+	<base-container :id="id" set-type="dialog" @set-args="simDatas.setNode(id, {
+		type: 'output',
+		args: undefined
+	})">
 		<template #component-logo>
 			<p><strong>示波器</strong></p>
 			<Handle id="b" type="target" :position="Position.Left" :is-valid-connection="simDatas.isValidConnection"

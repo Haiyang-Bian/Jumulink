@@ -140,7 +140,12 @@ function SumSymbol() {
 </script>
 
 <template>
-	<base-container :id="props.id" border-width="0">
+	<base-container :id="props.id" border-width="0" @set-args="simDatas.setNode(id, {
+		type: 'Sum',
+		args: {
+			symbol: opts.symbol
+		}
+	})">
 		<template #component-logo>
 			<Logo>
 				<template #handle>

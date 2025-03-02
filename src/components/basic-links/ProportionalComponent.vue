@@ -32,7 +32,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<base-container :id="id" border-width="0">
+	<base-container :id="id" border-width="0" @set-args="simDatas.setNode(id, msg)">
 		<template #component-logo>
 			<svg xmlns="http://www.w3.org/2000/svg">
 				<polygon points="2,2 2,98 98,50"
