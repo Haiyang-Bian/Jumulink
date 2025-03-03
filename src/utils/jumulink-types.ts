@@ -16,7 +16,8 @@ export interface IComponentInfo<T> {
 // 计算信息（与Julia后端的接口）
 export interface ICalcInfo {
 	nodes: Record<string, IComponentInfo<any>>,
-	map: IAjmatrix[]
+	map: IAjmatrix[],
+	tend: number
 }
 
 // 计算结果信息（与Julia后端的接口）

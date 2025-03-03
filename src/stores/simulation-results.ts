@@ -43,16 +43,16 @@ export const useSimulationResultsStore = defineStore('simulationResults', () => 
 		if (isServerExists) {
 			calculationServer.value = new WebSocket(`ws://${BACKEND_URL}/calculation`)
 			calculationServer.value.onopen = () => {
-				console.log('连接成功');
+
 			};
 			calculationServer.value.onmessage = (event: MessageEvent) => {
 				const data: IResultDatas = JSON.parse(event.data.toString());
 				done.value = true;
 				resultDatas.value = data
-				console.log(data);
+				ElMessage.success('计算完成!')
 			};
-			calculationServer.value.onclose = (e) => {
-				console.log('连接关闭', e);
+			calculationServer.value.onclose = () => {
+
 			};
 			calculationServer.value.onerror = () => {
 				ElMessage.error('服务器连接失败，请检查服务器是否开启')
@@ -71,10 +71,10 @@ export const useSimulationResultsStore = defineStore('simulationResults', () => 
 
 	return {
 		done,
-		resultDatas,
 		getTimes,
 		getResultDatas,
 		connectServer,
-		simulationStart
+		simulationStart,
+		resultDatas
 	}
 })

@@ -1,6 +1,8 @@
 
 global input = () -> ()
 
+Meta.parse(x::Number) = x
+
 """
 仿真问题函数
 """
@@ -13,7 +15,7 @@ end
 """
 控制系统前处理
 """
-function pretreatment(input::Dict)
+function pretreatment(input::Dict)::SystemMap
     link = AbstractLink[]
     lines = map((x) -> (x["nid"]), input["map"])
     sys_map = zeros(length(lines), length(lines))
@@ -29,7 +31,7 @@ function pretreatment(input::Dict)
         elseif msg["type"] == "TransFunction"
             push!(link, Tf(order, Fraction(eval(Meta.parse(msg["args"]["num"])), eval(Meta.parse(msg["args"]["den"])))))
             order += 1
-        elseif msg["type"] in ["阶跃输入", "斜坡输入", "抛物线输入"]
+        elseif msg["type"] in ["step", "line", "parabola"]
             push!(link, Input(order, (x) -> basic_input(msg["type"], Meta.parse(msg["args"]["K"]), Meta.parse(msg["args"]["t"]), x)))
             order += 1
         elseif msg["type"] == "output"
@@ -46,6 +48,48 @@ function pretreatment(input::Dict)
             order += 1
         elseif msg["type"] == "D_A"
             push!(link, Tf(order, Fraction([0, Meta.parse(msg["args"]["Td"]) * Meta.parse(msg["args"]["kd"])], [1, Meta.parse(msg["args"]["Td"])])))
+            order += 1
+        end
+    end
+    return SystemMap(link, sys_map)
+end
+
+# 那是我最后的倔强
+function pretreatment(input::ICalcInfo)::SystemMap
+    link = AbstractLink[]
+    lines::Vector{String} = map((x::IAjmatrix) -> (x.nid), input.map)
+    sys_map::Matrix{Int8} = zeros(length(lines), length(lines))
+    for i in eachindex(input.map)
+        sys_map[i, :] += input.map[i].nnodes
+    end
+    order = 1
+    for id in lines
+        msg::IComponentInfo = input.nodes[id]
+        if msg.type == "Sum"
+            push!(link, Sum(order))
+            order += 1
+        elseif msg.type == "TransFunction"
+            num = eval(Meta.parse(msg.args["num"]))
+            den = eval(Meta.parse(msg.args["den"]))
+            push!(link, Tf(order, Fraction(num, den)))
+            order += 1
+        elseif msg.type in ["step", "line", "parabola"]
+            push!(link, Input(order, (x) -> basic_input(msg.type, msg.args["K"], msg.args["t"], x)))
+            order += 1
+        elseif msg.type == "output"
+            push!(link, Output(order))
+            order += 1
+        elseif msg.type == "P"
+            push!(link, Tf(order, Fraction([msg.args["Kp"]], [1])))
+            order += 1
+        elseif msg.type == "I"
+            push!(link, Tf(order, Fraction([1], [0, msg.args["Ti"]])))
+            order += 1
+        elseif msg.type == "D_I"
+            push!(link, Tf(order, Fraction([0, msg.args["Td"]], [1])))
+            order += 1
+        elseif msg.type == "D_A"
+            push!(link, Tf(order, Fraction([0, msg.args["Td"] * msg.args["kd"]], [1, msg.args["Td"]])))
             order += 1
         end
     end
@@ -85,7 +129,7 @@ end
 """
 function ControlSystem(msg::Dict)
     @info "正在解析系统参数与结构..."
-    sys = pretreatment(msg)
+    sys::SystemMap = pretreatment(msg)
     @info "完成!"
     @info "正在生成传递矩阵..."
     sys_transfer_matrix, iorder, oorder = transfer_matrix(sys)
@@ -102,10 +146,10 @@ function ControlSystem(msg::Dict)
     for i in eachindex(oorder)
         out = Dict()
         for j in eachindex(iorder)
-            push!(out, msg["map"][iorder[j]]["nid"] => solve_by_state_space(sys_state_space[i, j], 50.0, inputs[j]))
+            push!(out, msg["map"][iorder[j]]["nid"] => solve_by_state_space(sys_state_space[i, j], msg["tend"], inputs[j]))
         end
         push!(ans, msg["map"][oorder[i]]["nid"] => out)
     end
     @info "求解结束!"
-    return Dict(:x => range(0, 50, 100), :ans => ans)
+    return Dict(:x => range(0, stop=msg["tend"], length=100), :ans => ans)
 end

@@ -29,6 +29,7 @@ function server_mode()
     @websocket "/calculation" function (ws::HTTP.WebSocket)
         for msg in ws
             @info "接受到计算请求！开始解析请求。。。"
+            println(msg)
             msg = JSON3.read(msg, Dict)
             @info "解析完毕！开始计算。。。"
             res = ControlSystem(msg)

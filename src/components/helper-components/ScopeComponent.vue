@@ -142,8 +142,10 @@ onMounted(() => {
 		</template>
 		<template #component-show>
 			<Scope />
-			<el-button @click="multiGraph = false">单图显示</el-button>
-			<el-button @click="multiGraph = true">分图显示</el-button>
+			<span>
+				<el-button @click="multiGraph = false">单图显示</el-button>
+				<el-button @click="multiGraph = true">分图显示</el-button>
+			</span>
 		</template>
 	</base-container>
 </template>

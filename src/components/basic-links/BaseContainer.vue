@@ -84,8 +84,10 @@ const containerBorderStyle: ComputedRef<CSSProperties> = computed(() => {
 			<slot name="component-set"></slot>
 		</div>
 	</el-drawer>
-	<el-dialog v-model="show.showDialog" title="Tips" width="500" :append-to-body="true">
-		<slot name="component-show"></slot>
+	<el-dialog v-model="show.showDialog" title="Tips" :fullscreen="true" :append-to-body="true">
+		<div class="dialog-content">
+			<slot name="component-show"></slot>
+		</div>
 	</el-dialog>
 
 </template>
@@ -128,6 +130,14 @@ const containerBorderStyle: ComputedRef<CSSProperties> = computed(() => {
 	flex-direction: column;
 	justify-content: center;
 	align-items: left;
+	gap: 10px;
+}
+
+.dialog-content {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 	gap: 10px;
 }
 </style>

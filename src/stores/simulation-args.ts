@@ -5,7 +5,7 @@ import { MarkerType, useVueFlow, type Connection, type HandleElement } from '@vu
 import { isSum, matchIdNum } from '@/utils/deal-request';
 
 export const useSimulaitionArgsStore = defineStore('simulationArgs', () => {
-	const start = ref(false);
+	const tend = ref(50.0);
 	const nodes = ref<Record<string, IComponentInfo<any>>>({});
 	const adjacencyMatrix = ref<IAjmatrix[]>([]);
 
@@ -18,7 +18,8 @@ export const useSimulaitionArgsStore = defineStore('simulationArgs', () => {
 	const calculation = computed<ICalcInfo>(() => {
 		return {
 			nodes: nodes.value,
-			map: adjacencyMatrix.value
+			map: adjacencyMatrix.value,
+			tend: tend.value
 		}
 	})
 
@@ -171,7 +172,7 @@ export const useSimulaitionArgsStore = defineStore('simulationArgs', () => {
 	}
 
 	return {
-		start, nodes, adjacencyMatrix,
+		tend, nodes, adjacencyMatrix,
 		calculation,
 		systemGraph,
 		IVueFlowRef,

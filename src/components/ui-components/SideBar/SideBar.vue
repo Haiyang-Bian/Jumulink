@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { useSimulaitionArgsStore } from '@/stores/simulation-args';
 import { useSimulationResultsStore } from '@/stores/simulation-results';
 import { ElTabPane, ElMessage } from 'element-plus';
 import { ref } from 'vue';
 
+const simDatas = useSimulaitionArgsStore();
 const simResults = useSimulationResultsStore();
 
 const activeName = ref('lib')
@@ -68,6 +70,10 @@ function handleSim() {
 			</el-scrollbar>
 		</el-tab-pane>
 		<el-tab-pane label="仿真设置" name="simulation">
+			<span>
+				<el-text>仿真终止时间：</el-text>
+				<el-input-number v-model="simDatas.tend" />
+			</span>
 			<el-button @click="handleSim">按下以开始仿真!</el-button>
 		</el-tab-pane>
 	</el-tabs>

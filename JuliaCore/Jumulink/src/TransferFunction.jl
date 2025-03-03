@@ -20,19 +20,19 @@ struct Tf <: AbstractLink
 end
 
 function basic_input(type::String, k::Number, t::Number, x)
-    if type == "阶跃输入"
+    if type == "step"
         if x <= t
             return 0
         else
             return k
         end
-    elseif type == "斜坡输入"
+    elseif type == "line"
         if x <= t
             return 0
         else
             return k * x
         end
-    elseif type == "抛物线输入"
+    elseif type == "parabola"
         if x <= t
             return 0
         else

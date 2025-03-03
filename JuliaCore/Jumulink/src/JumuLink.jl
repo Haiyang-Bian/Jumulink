@@ -1,9 +1,14 @@
 module JumuLink
 
 using DifferentialEquations, Dierckx
-using Oxygen, HTTP, JSON3, SHA, Base64
+
+using Oxygen
+@oxidise
+
+using HTTP, JSON3, StructTypes
 import HTTP.WebSockets.send
 
+include("Types.jl")
 include("Polynomial.jl")
 include("SymbolTest.jl")
 include("TransferFunction.jl")

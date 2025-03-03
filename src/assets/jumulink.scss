@@ -86,8 +86,8 @@ body,
 }
 
 .picture {
-	width: 920px;
-	height: 580px;
+	width: calc(90vw - 20px);
+	height: calc(80vh - 20px);
 	border-style: solid;
 }
 

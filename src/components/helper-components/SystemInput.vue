@@ -15,14 +15,12 @@ const props = defineProps<{ id: string }>()
 const simDatas = useSimulaitionArgsStore();
 
 const msg = ref<IComponentInfo<number>>({
-	type: '阶跃输入',
+	type: 'step',
 	args: {
 		K: 1,
 		t: 0
 	}
 })
-
-const value = ref<string>('阶跃输入')
 
 onMounted(() => {
 	let value = simDatas.getNode(props.id)
@@ -36,15 +34,15 @@ onMounted(() => {
 const options = [
 	{
 		label: '阶跃输入',
-		value: '阶跃输入'
+		value: 'step'
 	},
 	{
 		label: '斜坡输入',
-		value: '斜坡输入'
+		value: 'line'
 	},
 	{
 		label: '抛物线输入',
-		value: '抛物线输入'
+		value: 'parabola'
 	}
 ]
 </script>
@@ -59,7 +57,7 @@ const options = [
 				}" />
 		</template>
 		<template #component-set>
-			<el-select v-model="value" placeholder="Select" size="large" style="width: 240px">
+			<el-select v-model="msg.type" placeholder="Select" size="large" style="width: 240px">
 				<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
 			</el-select>
 			<span>
