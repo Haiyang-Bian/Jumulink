@@ -28,7 +28,7 @@ const props = defineProps({
 	}
 })
 
-const emit = defineEmits(['setArgs'])
+const emit = defineEmits(['setArgs', 'expand'])
 
 const show = reactive({
 	showDialog: false,
@@ -84,7 +84,8 @@ const containerBorderStyle: ComputedRef<CSSProperties> = computed(() => {
 			<slot name="component-set"></slot>
 		</div>
 	</el-drawer>
-	<el-dialog v-model="show.showDialog" title="Tips" :fullscreen="true" :append-to-body="true">
+	<el-dialog v-model="show.showDialog" title="Tips" :fullscreen="true" :append-to-body="true"
+		@opened="() => emit('expand')">
 		<div class="dialog-content">
 			<slot name="component-show"></slot>
 		</div>

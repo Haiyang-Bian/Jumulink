@@ -1,18 +1,7 @@
 <script setup lang="ts">
 import { Handle, Position } from '@vue-flow/core'
-import { useMessage, NScrollbar } from 'naive-ui'
-import { h, nextTick, onMounted, ref } from 'vue';
-import * as echarts from 'echarts/core';
-import { LineChart } from 'echarts/charts';
-import {
-	TitleComponent,
-	TooltipComponent,
-	GridComponent,
-	DatasetComponent,
-	TransformComponent
-} from 'echarts/components';
-import { LabelLayout, UniversalTransition } from 'echarts/features';
-import { CanvasRenderer } from 'echarts/renderers';
+import { nextTick, onMounted, ref, watch, markRaw } from 'vue';
+import * as echarts from 'echarts';
 import { BaseContainer } from '@/components/basic-links'
 import { useSimulaitionArgsStore } from '@/stores/simulation-args';
 import { useSimulationResultsStore } from '@/stores/simulation-results';
@@ -21,104 +10,38 @@ defineOptions({
 	inheritAttrs: false
 })
 
-// 注册必须的组件
-echarts.use([
-	TitleComponent,
-	TooltipComponent,
-	GridComponent,
-	DatasetComponent,
-	TransformComponent,
-	LineChart,
-	LabelLayout,
-	UniversalTransition,
-	CanvasRenderer
-]);
+const props = defineProps<{ id: string }>()
 
 const simDatas = useSimulaitionArgsStore();
 
 const simResult = useSimulationResultsStore();
 
-const multiGraph = ref(false)
+const container = ref<HTMLElement>()
 
-const msg = useMessage()
+const mainGraph = ref<echarts.ECharts | null>()
 
-function Scope() {
+function updateChart() {
 	if (simResult.done) {
-		let data = simResult.getResultDatas(props.id)
-		if (multiGraph.value) {
-			let graph = []
-			for (let d of data) {
-				graph.push(h(
-					'div',
-					{
-						class: 'picture',
-						ref: (el: any) => {
-							nextTick(() => {
-								let myChart = echarts.init(el)
-								myChart.setOption({
-									title: {
-										text: '输出变化图(关于'.concat(d.name, ')')
-									},
-									tooltip: {},
-									xAxis: {
-										data: simResult.getTimes
-									},
-									yAxis: {},
-									series: [d]
-								});
-							})
-						},
-					}
-				), h('br'))
-			}
-			return h(
-				NScrollbar,
-				graph
-			)
-		} else {
-			return h(
-				'div',
-				{
-					class: 'picture',
-					ref: (el: any) => {
-						nextTick(() => {
-							let myChart = echarts.init(el)
-							myChart.setOption({
-								title: {
-									text: '输出变化图'
-								},
-								tooltip: {},
-								xAxis: {
-									data: simResult.getTimes
-								},
-								yAxis: {},
-								series: data
-							});
-						})
-					},
-				}
-			)
-		}
+		mainGraph.value?.hideLoading()
+		let series = simResult.getResultDatas(props.id)
+		mainGraph.value?.setOption({
+			title: {
+				text: '输出变化图'
+			},
+			legend: {
+				data: series.map(s => s.name)
+			},
+			tooltip: {},
+			xAxis: {
+				data: simResult.getTimes
+			},
+			yAxis: {},
+			series: series
+		});
 	} else {
-		if (multiGraph.value) {
-			msg.error("没有数据,无法分图!")
-		}
-		return h(
-			'div',
-			{
-				class: "picture",
-				ref: (el: any) => {
-					nextTick(() => {
-						let myChart = echarts.init(el)
-						myChart.showLoading()
-					})
-				},
-			}
-		)
+		mainGraph.value?.showLoading()
 	}
 }
-
-const props = defineProps<{ id: string }>()
 
 onMounted(() => {
 	simDatas.setNode(props.id, {
@@ -126,13 +49,22 @@ onMounted(() => {
 		args: undefined
 	})
 })
+
+watch(() => simResult.done, updateChart)
 </script>
 
 <template>
 	<base-container :id="id" set-type="dialog" @set-args="simDatas.setNode(id, {
 		type: 'output',
 		args: undefined
-	})">
+	})" @expand="() => {
+		nextTick(() => {
+			// vue的更新与Echarts的更新冲突了，所以把它标记为原始的对象
+			// 防止vue搞它，主要是用了ref
+			mainGraph = markRaw(echarts.init(container))
+			updateChart()
+		})
+	}">
 		<template #component-logo>
 			<p style="font-size: 20px;">示波器</p>
 			<Handle id="b" type="target" :position="Position.Left" :is-valid-connection="simDatas.isValidConnection"
@@ -141,11 +73,9 @@ onMounted(() => {
 				}" />
 		</template>
 		<template #component-show>
-			<Scope />
-			<span>
-				<el-button @click="multiGraph = false">单图显示</el-button>
-				<el-button @click="multiGraph = true">分图显示</el-button>
-			</span>
+			<div class="picture" ref="container">
+				什么都没有！
+			</div>
 		</template>
 	</base-container>
 </template>
